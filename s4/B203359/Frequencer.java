@@ -192,7 +192,18 @@ public class Frequencer implements FrequencerInterface {
         //
         // ここに比較のコードを書け
         //
-        return 0; // この行は変更しなければならない。
+        //System.out.println("i: " + i);
+        int LOOP_NUM = mySpace.length - suffixArray[i];
+        int p;
+        if (k - j < LOOP_NUM) LOOP_NUM = k - j;
+        for (p = 0; p < LOOP_NUM; p++) {
+            if (mySpace[suffixArray[i] + p] == myTarget[j + p]) continue;
+            else if (mySpace[suffixArray[i] + p] <  myTarget[j + p]) return -1; // l.172
+            else return 1; // l.171
+        }
+
+        if (k - j <= mySpace.length - suffixArray[i]) return 0; // l.183, l.185
+        else return -1; // l.184
     }
 
 
@@ -216,7 +227,7 @@ public class Frequencer implements FrequencerInterface {
 
         // It returns the index of the first suffix
         // which is equal or greater than target_start_end.
-	// Suppose target is set "Ho Ho Ho Ho"
+	    // Suppose target is set "Ho Ho Ho Ho"
         // if start = 0, and end = 2, target_start_end is "Ho".
         // if start = 0, and end = 3, target_start_end is "Ho ".
         // Assuming the suffix array is created from "Hi Ho Hi Ho",
@@ -225,8 +236,45 @@ public class Frequencer implements FrequencerInterface {
         // if target_start_end is "Ho ", it will return 6.
         //
         // ここにコードを記述せよ。
-        //
-        return suffixArray.length; //このコードは変更しなければならない。
+        /*
+        int position = 0;
+        for (position = 0; position < mySpace.length; position++)
+            if(targetCompare(position, start, end) == 0) return position;
+        return mySpace.length; // 見つからなかったとき
+        */
+        ///*
+        // 二分探査
+        // 探査結果の保存が必要
+        int find = mySpace.length;
+        int top = 0, bottom = mySpace.length;
+        while(top <= bottom) {
+            int position = (top + bottom) / 2;
+            if(position < 0 || mySpace.length <= position) break;
+            int result = targetCompare(position , start, end);
+            if(result == 0) { // 文字列を含む
+                find = position; // 探査結果を保存
+                bottom = position-1; // 辞書順で前方を探索
+            } else if (result == 1) { // spaceよりも前に文字列がある
+                bottom = position - 1; // 辞書順で前方を探索
+            } else { // targetよりも後ろに文字列がある
+                top = position + 1; // 辞書順で後方を探索
+            }
+        }
+        return find;
+        //*/
+        /*
+        mySpace.length: 3, target: AAAA
+        start: 0, end: 4
+        0:A
+        1:AA
+        2:AAA
+
+        top: 3
+        bottom: 3
+        position: 3
+        result: -1
+        find: 3
+        */
     }
 
     private int subByteEndIndex(int start, int end) {
@@ -257,8 +305,44 @@ public class Frequencer implements FrequencerInterface {
         // if target_start_end is"i", it will return 9 for "Hi Ho Hi Ho".
         //
         //　ここにコードを記述せよ
-        //
-        return suffixArray.length; // この行は変更しなければならない、
+        /*
+        int position;
+        for (position = mySpace.length - 1; position >= 0; position--)
+            if(targetCompare(position, start, end) == 0) return position + 1;
+        return mySpace.length; // 見つからなかったとき
+        */
+        ///*
+        // 二分探査
+        // 探査結果の保存が必要
+        int find = mySpace.length;
+        int top = 0, bottom = mySpace.length;
+        while(top <= bottom) {
+            int position = (top + bottom) / 2;
+            if(position < 0 || mySpace.length <= position) break;
+            int result = targetCompare(position , start, end);
+            if(result == 0) { // 文字列を含む
+                find = position + 1; // 探査結果を保存
+                top = position + 1; // 辞書順で前方を探索
+            } else if (result == 1) { // targetよりも前に文字列がある
+                bottom = position - 1; // 辞書順で前方を探索
+            } else { // targetよりも後ろに文字列がある
+                top = position + 1; // 辞書順で後方を探索
+            }
+        }
+        return find;
+        //*/
+        /* length = 4 target: A
+        0:A
+        1:AA
+        2:AAA
+        3:AAAA
+
+        top: 4
+        bottom: 4
+        position: 4 == mySpace.length
+        result: 0
+        find: 4
+        */
     }
 
     public static void main(String[] args) {
@@ -281,20 +365,62 @@ public class Frequencer implements FrequencerInterface {
             A:o Hi Ho
             */
 
-            // frequencerObject.setTarget("H".getBytes());
-            // //
-            // // **** Please write code to check subByteStartIndex, and subByteEndIndex
-            // //
-            // int result = frequencerObject.frequency();
-            // System.out.print("Freq = "+ result+" ");
-            // if(4 == result) {
-            //     System.out.println("OK");
-            // } else {
-            //     System.out.println("WRONG");
-            // }
+            //
+            // **** Please write code to check subByteStartIndex, and subByteEndIndex
+            //
+            frequencerObject.setTarget("H".getBytes());
+            int result = frequencerObject.frequency();
+            System.out.print("Freq = "+ result +" ");
+            if(4 == result) {
+                System.out.println("OK");
+            } else {
+                System.out.println("WRONG");
+            }
+            // check subByteStartIndex
+            frequencerObject.setTarget("Ho Ho Ho Ho".getBytes());
+            result = frequencerObject.frequency();
+            System.out.print("Freq = "+ result +" ");
+            if(0 == result) {
+                System.out.println("OK");
+            } else {
+                System.out.println("WRONG");
+            }
+            result = frequencerObject.subByteStartIndex(3, 5);
+            System.out.print("subByteStart = "+ result +" ");
+            if(5 == result) {
+                System.out.println("OK");
+            } else {
+                System.out.println("WRONG");
+            }
+            result = frequencerObject.subByteEndIndex(3, 5);
+            System.out.print("subByteEnd = "+ result +" ");
+            if(7 == result) {
+                System.out.println("OK");
+            } else {
+                System.out.println("WRONG");
+            }
+
+            // AAA
+            frequencerObject.setSpace("AAAA".getBytes());
+            frequencerObject.setTarget("A".getBytes());
+            result = frequencerObject.subByteStartIndex(0, 1);
+            System.out.print("subByteStart = "+ result +" ");
+            if(0 == result) {
+                System.out.println("OK");
+            } else {
+                System.out.println("WRONG");
+            }
+            result = frequencerObject.subByteEndIndex(0, 1);
+            System.out.print("subByteEnd = "+ result +" ");
+            if(4== result) {
+                System.out.println("OK");
+            } else {
+                System.out.println("WRONG");
+            }
         }
         catch(Exception e) {
             System.out.println("STOP");
+            e.printStackTrace();
         }
     }
 }
