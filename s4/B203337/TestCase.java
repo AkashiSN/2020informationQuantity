@@ -47,7 +47,65 @@ public class TestCase {
 	    if(4 != freq) {System.out.println("frequency() for Hi_Ho_Hi_Ho, should return 4, when taget is H. But it returns "+freq); c++; }
 
 	    // Write your testCase here
+		FrequencerInterface test = new Frequencer();
 
+		// 正常な動作
+		test.setSpace("abcdefg".getBytes());
+		test.setTarget("a".getBytes());
+		freq = test.frequency();
+		if (freq != 1) {
+			System.out.println("frequency() should return 1. But it returns " + freq);
+			c++;
+		}
+
+		// spaceとtargetの長さが0
+		test.setSpace("".getBytes());
+		test.setTarget("".getBytes());
+		freq = test.frequency();
+		if (freq > 0) {
+			System.out.println("frequency() should return 0 or -1. But it returns " + freq);
+			c++;
+		}
+
+		// targetの長さが0のときに-1が返されない
+		test.setSpace("abcdefg".getBytes());
+		freq = test.frequency();
+		if (freq != -1) {
+			System.out.println("frequency() should return -1. But it returns " + freq);
+			c++;
+		}
+
+		// spaceの長さが0
+		test.setSpace("".getBytes());
+		test.setTarget("a".getBytes());
+		freq = test.frequency();
+		if (freq != 0) {
+			System.out.println("frequency() should return 0. But it returns " + freq);
+			c++;
+		}
+
+		// subByteFrequency()は未実装であるため値によらず常に-1を返す
+		int subByteFreq = 0;
+		test.setSpace("abcdefg".getBytes());
+		freq = test.frequency();
+		subByteFreq = test.subByteFrequency(0, "a".length());
+		if (freq != 1) {
+			System.out.println("frequency() should return 1. But it returns " + freq);
+			c++;
+		}
+		if (subByteFreq < 0) {
+			System.out.println("subByteFrequency() should return greater than 0. But it returns " + subByteFreq);
+			c++;
+		}
+
+		// spaceやtargetがnullの場合を想定した処理が記述されていないためfrequency()で例外が発生する
+		test.setSpace(null);
+		test.setTarget(null);
+		freq = test.frequency();
+		if (freq != 0) {
+			System.out.println("frequency() should return 0. But it returns " + freq);
+			c++;
+		}
 	}
 	catch(Exception e) {
 	    System.out.println("Exception occurred in Frequencer Object");
@@ -72,6 +130,17 @@ public class TestCase {
 	    myObject.setTarget("00".getBytes());
 	    value = myObject.estimation();
 	    if((value < 3.9999) || (4.0001 <value)) { System.out.println("IQ for 00 in 3210321001230123 should be 4.0. But it returns "+value); c++; }
+
+		// targetの長さが0のときに0.0が返されない
+	    myObject.setTarget("".getBytes());
+	    value = myObject.estimation();
+		if((value < -0.0001) || (0.0001 <value)) { System.out.println("IQ for Target none in 3210321001230123 should be 0.0. But it returns "+value); c++; }
+
+		// spaceが設定されていないときにDouble.MAX_VALUEが返されず例外が発生する
+		InformationEstimatorInterface test = new InformationEstimator();
+		test.setTarget("0".getBytes());
+		value = test.estimation();
+		if((value < Double.MAX_VALUE) || (Double.MAX_VALUE <value)) { System.out.println("IQ for 0 in Space none should be Double.MAX_VALUE. But it returns "+value); c++; }
 	}
 	catch(Exception e) {
 	    System.out.println("Exception occurred in InformationEstimator Object");

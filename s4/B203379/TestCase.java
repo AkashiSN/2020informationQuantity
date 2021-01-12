@@ -48,6 +48,16 @@ public class TestCase {
 
 	    // Write your testCase here
 
+	    myObject.setSpace("".getBytes());
+	    myObject.setTarget("N".getBytes());
+	    freq = myObject.frequency();
+	    if(0 != freq) {System.out.println("frequency() for Orphans, should return answer, when taget is H. But it returns "+freq); c++; }
+
+	    myObject.setSpace("Orphans".getBytes());
+	    myObject.setTarget("answer".getBytes());
+	    freq = myObject.frequency();
+	    if(0 != freq) {System.out.println("frequency() for Orphans, should return answer, when taget is H. But it returns "+freq); c++; }
+
 	}
 	catch(Exception e) {
 	    System.out.println("Exception occurred in Frequencer Object");

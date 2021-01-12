@@ -1,4 +1,4 @@
-package s4.B203323; // Please modify to s4.Bnnnnnn, where nnnnnn is your student ID. 
+package s4.B203323; // Please modify to s4.Bnnnnnn, where nnnnnn is your student ID.
 import java.lang.*;
 import s4.specification.*;
 
@@ -24,8 +24,8 @@ public interface InformationEstimatorInterface{
 // It returns Double.MAX_VALUE, when the true value is infinite, or space is not set.
 // The behavior is undefined, if the true value is finete but larger than Double.MAX_VALUE.
 // Note that this happens only when the space is unreasonably large. We will encounter other problem anyway.
-// Otherwise, estimation of information quantity, 
-}                        
+// Otherwise, estimation of information quantity,
+}
 */
 
 
@@ -47,6 +47,15 @@ public class TestCase {
 	    if(4 != freq) {System.out.println("frequency() for Hi_Ho_Hi_Ho, should return 4, when taget is H. But it returns "+freq); c++; }
 
 	    // Write your testCase here
+      if(freq <= 0){
+        System.out.println("frequency method is error");
+      // the data to search is empty
+      }else if(freq == "Hi Ho Hi Ho".getBytes().length){
+        System.out.println("the data to search is empty");
+      }else{
+        System.out.print("frequency count = ");
+        System.out.println(freq);
+      }
 
 	}
 	catch(Exception e) {
@@ -79,5 +88,4 @@ public class TestCase {
 	}
 	if(c == 0) { System.out.println("TestCase OK"); }
     }
-}	    
-	    
+}

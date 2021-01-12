@@ -45,8 +45,23 @@ public class TestCase {
 	    myObject.setTarget("H".getBytes());
 	    freq = myObject.frequency();
 	    if(4 != freq) {System.out.println("frequency() for Hi_Ho_Hi_Ho, should return 4, when taget is H. But it returns "+freq); c++; }
-
-	    // Write your testCase here
+		// Write your testCase here
+		//BlackBox
+		myObject = new Frequencer();
+		freq = myObject.frequency();
+		if(-1 != freq){System.out.println("frequency(), should return -1, when taget is not set. But it is returns "+freq); c++;}
+		myObject.setTarget("T".getBytes());
+		freq = myObject.frequency();
+		if(0 != freq){System.out.println("frequency(), should return 0, when space is not set. But it is returns "+freq); c++;}
+		myObject.setSpace("Testcase".getBytes());
+		freq = myObject.frequency();
+		if(1 != freq){System.out.println("frequency() for Testcase, should return 1, when target T. But it returns "+freq); c++;}
+		//WhiteBox
+		myObject = new Frequencer();
+		myObject.setSpace("A".getBytes());
+		myObject.setTarget("ABC".getBytes());
+		freq = myObject.frequency();
+		if(0 != freq){System.out.println("frequency() for A, should return 0, when target ABC. But it returns  "+freq); c++;}
 
 	}
 	catch(Exception e) {
@@ -71,7 +86,16 @@ public class TestCase {
 	    if((value < 2.9999) || (3.0001 <value)) { System.out.println("IQ for 0123 in 3210321001230123 should be 3.0. But it returns "+value); c++; }
 	    myObject.setTarget("00".getBytes());
 	    value = myObject.estimation();
-	    if((value < 3.9999) || (4.0001 <value)) { System.out.println("IQ for 00 in 3210321001230123 should be 4.0. But it returns "+value); c++; }
+		if((value < 3.9999) || (4.0001 <value)) { System.out.println("IQ for 00 in 3210321001230123 should be 4.0. But it returns "+value); c++; }
+		
+		myObject = new InformationEstimator();
+		value = myObject.estimation();
+		if(value != 0.0){System.out.println("value should be 0.0 when target not set. But it returns "+value); c++;}
+		myObject.setTarget("00".getBytes());
+		value = myObject.estimation();
+		if(value != Double.MAX_VALUE){System.out.println("value should be Double.MAX_VALUE when space not set. But it returns "+value); c++;}
+		myObject.setSpace("00283940".getBytes());
+		if((value < 2.9999) || (value > 3.0001)){System.out.println("IQ for 00 in 00283940 should be 4.0. But it returns "+value); c++;}
 	}
 	catch(Exception e) {
 	    System.out.println("Exception occurred in InformationEstimator Object");
@@ -79,5 +103,5 @@ public class TestCase {
 	}
 	if(c == 0) { System.out.println("TestCase OK"); }
     }
-}	    
+} 
 	    

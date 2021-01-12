@@ -47,6 +47,10 @@ public class TestCase {
 	    if(4 != freq) {System.out.println("frequency() for Hi_Ho_Hi_Ho, should return 4, when taget is H. But it returns "+freq); c++; }
 
 	    // Write your testCase here
+	    myObject.setSpace("Orphans".getBytes());
+	    myObject.setTarget("answer".getBytes());
+	    freq = myObject.frequency();
+	    if(0 != freq) {System.out.println("frequency() for Orphans, should return answer, when taget is H. But it returns "+freq); c++; }
 
 	}
 	catch(Exception e) {

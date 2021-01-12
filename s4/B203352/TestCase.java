@@ -47,7 +47,24 @@ public class TestCase {
 	    if(4 != freq) {System.out.println("frequency() for Hi_Ho_Hi_Ho, should return 4, when taget is H. But it returns "+freq); c++; }
 
 	    // Write your testCase here
+		freq = myObject.subByteFrequency(3, 7);
+		if(2 != freq) {System.out.println("subByteFrequency(3, 7) for Hi_Ho_Hi_Ho, should return 2, when target is H. But it returns "+freq); c++; }
 
+		myObject = new Frequencer();
+		myObject.setSpace("Hi Ho Hi Ho".getBytes());
+		freq = myObject.frequency();
+		if(-1 != freq) {System.out.println("frequency() should return -1, when target is not set. But it returns "+freq); c++; }
+		myObject.setTarget("".getBytes());
+		freq = myObject.frequency();
+		if(-1 != freq) {System.out.println("frequency() should return -1, when target's length is zero. But it returns "+freq); c++; }
+
+		myObject = new Frequencer();
+		myObject.setTarget("H".getBytes());
+		freq = myObject.frequency();
+		if(0 != freq) {System.out.println("frequency() should return 0, when space is not set. But it returns "+freq); c++; }
+		myObject.setSpace("".getBytes());
+		freq = myObject.frequency();
+		if(0 != freq) {System.out.println("frequency() should return 0, when space's length is zero. But it returns "+freq); c++; }
 	}
 	catch(Exception e) {
 	    System.out.println("Exception occurred in Frequencer Object");
