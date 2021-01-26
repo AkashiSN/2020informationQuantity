@@ -71,9 +71,37 @@ public class Frequencer implements FrequencerInterface{
         // if suffix_i = suffix_j, it returns 0;   
 
         // ここにコードを記述せよ 
-        //                                 
-
+        //                     
+        
+        while(i<mySpace.length && j<mySpace.length && mySpace[i]==mySpace[j]){
+            i++;j++;
+        }
         if(i==mySpace.length){
+            if(j==mySpace.length)
+                return 0;
+            return -1;
+        }else if(j==mySpace.length)
+            return 1;
+        else if(mySpace[i]<mySpace[j])
+            return -1;
+        else
+            return 1;
+
+        /*while(true){
+            if(mySpace[i]<mySpace[j])
+                return -1;
+            else if(mySpace[i]>mySpace[j])
+                return 1;
+            i++;j++;
+            if(i==mySpace.length){
+                if(j==mySpace.length)
+                    return 0;
+                return -1;
+            }else if(j==mySpace.length)
+                return 1;
+        }*/
+
+        /*if(i==mySpace.length){
             if(j==mySpace.length)
                 return 0;
             return -1;
@@ -85,7 +113,7 @@ public class Frequencer implements FrequencerInterface{
             return -1;
         else
             return 1;
-
+        */
         //return 0; // この行は変更しなければいけない。 
     }
 
@@ -115,6 +143,9 @@ public class Frequencer implements FrequencerInterface{
         //   suffixArray[ 2]= 0:CBA
         // のようになるべきである。
 
+        //long starttime=System.nanoTime();
+
+        /*
         int compare;
         int temp;
         for(int i=0;i<space.length-1;i++){
@@ -126,8 +157,46 @@ public class Frequencer implements FrequencerInterface{
                     suffixArray[j-1]=temp;
                 }
             }
+        }*/
+
+
+        for (int i = space.length /2 -1; i>=0; i--){
+            heap(i, space.length);
+        }
+        for (int i = space.length-1 ; i>=0; i --){
+            if (suffixCompare(suffixArray[0],suffixArray[i])>0) {
+                int tmp = suffixArray[0];
+                suffixArray[0] = suffixArray[i];
+                suffixArray[i] = tmp;
+
+                heap(0, i-1);
+            }
+        }
+        //long endtime=System.nanoTime();
+        //System.out.println("time:"+(endtime-starttime));
+
+    }
+
+    private void heap(int root, int n){
+        int largest = root;
+        int left = 2 * root + 1;
+        int right = 2 * root + 2;
+
+        if (left < n && suffixCompare(suffixArray[left],suffixArray[largest])>0){
+            largest = left;
         }
 
+        if (right < n && suffixCompare(suffixArray[right],suffixArray[largest])>0){
+            largest = right;
+        }
+
+        if (largest != root){
+            int swap = suffixArray[root];
+            suffixArray[root] = suffixArray[largest];
+            suffixArray[largest] = swap;
+
+            heap(largest, n );
+        }
     }
 
     // ここから始まり、指定する範囲までは変更してはならないコードである。
@@ -358,7 +427,7 @@ public class Frequencer implements FrequencerInterface{
     public static void main(String[] args) {
         Frequencer frequencerObject;
         try { // テストに使うのに推奨するmySpaceの文字は、"ABC", "CBA", "HHH", "Hi Ho Hi Ho".
-            /*frequencerObject = new Frequencer();
+            frequencerObject = new Frequencer();
             frequencerObject.setSpace("ABC".getBytes());
             frequencerObject.printSuffixArray();
             frequencerObject = new Frequencer();
@@ -366,7 +435,7 @@ public class Frequencer implements FrequencerInterface{
             frequencerObject.printSuffixArray();
             frequencerObject = new Frequencer();
             frequencerObject.setSpace("HHH".getBytes());
-            frequencerObject.printSuffixArray();*/
+            frequencerObject.printSuffixArray();
             frequencerObject = new Frequencer();
             //frequencerObject.setSpace("Hi Ho Hi Ho".getBytes());
             //frequencerObject.printSuffixArray();

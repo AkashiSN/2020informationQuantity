@@ -358,40 +358,57 @@ public class Frequencer implements FrequencerInterface{
     public static void main(String[] args) {
         Frequencer frequencerObject;
         try { // テストに使うのに推奨するmySpaceの文字は、"ABC", "CBA", "HHH", "Hi Ho Hi Ho".
-            /*frequencerObject = new Frequencer();
+            frequencerObject = new Frequencer();
             frequencerObject.setSpace("ABC".getBytes());
             frequencerObject.printSuffixArray();
+            System.out.println();
             frequencerObject = new Frequencer();
             frequencerObject.setSpace("CBA".getBytes());
             frequencerObject.printSuffixArray();
+            System.out.println();
             frequencerObject = new Frequencer();
             frequencerObject.setSpace("HHH".getBytes());
-            frequencerObject.printSuffixArray();*/
+            frequencerObject.printSuffixArray();
             frequencerObject = new Frequencer();
-            //frequencerObject.setSpace("Hi Ho Hi Ho".getBytes());
-            //frequencerObject.printSuffixArray();
+            System.out.println();
+            frequencerObject.setSpace("Hi Ho Hi Ho".getBytes());
+            frequencerObject.printSuffixArray();
             /* Example from "Hi Ho Hi Ho"    
-               0: Hi Ho                      
-               1: Ho                         
-               2: Ho Hi Ho                   
-               3:Hi Ho                       
-               4:Hi Ho Hi Ho                 
-               5:Ho                          
-               6:Ho Hi Ho
-               7:i Ho                        
-               8:i Ho Hi Ho                  
-               9:o                           
-              10:o Hi Ho                     
+            0: Hi Ho                      
+            1: Ho                         
+            2: Ho Hi Ho                   
+            3:Hi Ho                       
+            4:Hi Ho Hi Ho                 
+            5:Ho                          
+            6:Ho Hi Ho
+            7:i Ho                        
+            8:i Ho Hi Ho                  
+            9:o                           
+            10:o Hi Ho                     
             */
 
             frequencerObject.setTarget("H".getBytes());
-            //                                         
-            // ****  Please write code to check subByteStartIndex, and subByteEndIndex
-            //
-
             int result = frequencerObject.frequency();
             System.out.print("Freq = "+ result+" ");
             if(4 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
+            //                                         
+            // ****  Please write code to check subByteStartIndex, and subByteEndIndex
+            //
+            frequencerObject.setTarget("Ho Ho Ho Ho".getBytes());
+            result = frequencerObject.subByteStartIndex(0, 2);
+            System.out.print("Start = "+ result+" ");
+            if(5 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
+            result = frequencerObject.subByteStartIndex(0, 3);
+            System.out.print("Start = "+ result+" ");
+            if(6 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
+            
+            frequencerObject.setTarget("High_and_Low".getBytes());
+            result = frequencerObject.subByteEndIndex(0, 2);
+            System.out.print("End = "+ result+" ");
+            if(5 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
+            result = frequencerObject.subByteEndIndex(1, 2);
+            System.out.print("End = "+ result+" ");
+            if(9 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
         }
         catch(Exception e) {
             System.out.println("STOP");

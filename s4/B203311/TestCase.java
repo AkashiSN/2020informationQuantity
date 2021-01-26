@@ -58,10 +58,10 @@ public class TestCase {
 		if(1 != freq){System.out.println("frequency() for Testcase, should return 1, when target T. But it returns "+freq); c++;}
 		//WhiteBox
 		myObject = new Frequencer();
-		myObject.setSpace("A".getBytes());
+		myObject.setSpace("AB".getBytes());
 		myObject.setTarget("ABC".getBytes());
 		freq = myObject.frequency();
-		if(0 != freq){System.out.println("frequency() for A, should return 0, when target ABC. But it returns  "+freq); c++;}
+		if(0 != freq){System.out.println("frequency() for AB, should return 0, when target ABC. But it returns  "+freq); c++;}
 
 	}
 	catch(Exception e) {
@@ -90,17 +90,19 @@ public class TestCase {
 		
 		myObject = new InformationEstimator();
 		value = myObject.estimation();
-		if(value != 0.0){System.out.println("value should be 0.0 when target not set. But it returns "+value); c++;}
-		myObject.setTarget("00".getBytes());
+		if((value < -0.09) || (value > 0.09)) { System.out.println("IQ for no target should be 0.0. But it returns "+value); c++; }
+		myObject.setTarget("0".getBytes());
 		value = myObject.estimation();
-		if(value != Double.MAX_VALUE){System.out.println("value should be Double.MAX_VALUE when space not set. But it returns "+value); c++;}
-		myObject.setSpace("00283940".getBytes());
-		if((value < 2.9999) || (value > 3.0001)){System.out.println("IQ for 00 in 00283940 should be 4.0. But it returns "+value); c++;}
+		if((value < Double.MAX_VALUE)) {System.out.println("IQ for no space should be Double.MAX_VALUE. But it returns "+value); c++; }
+		myObject.setSpace("10902030".getBytes());
+		value = myObject.estimation();
+		if((value < 0.9999) || (value > 1.0001)) { System.out.println("IQ for 0 in 10902030 should be 1.0. But it returns "+value); c++;}
 	}
 	catch(Exception e) {
 	    System.out.println("Exception occurred in InformationEstimator Object");
 	    c++;
 	}
+	
 	if(c == 0) { System.out.println("TestCase OK"); }
     }
 } 

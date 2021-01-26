@@ -22,6 +22,8 @@ public class InformationEstimator implements InformationEstimatorInterface {
     byte[] mySpace;  // Sample space to compute the probability
     FrequencerInterface myFrequencer;  // Object for counting frequency
 
+    double[] estimation_result;
+
     byte[] subBytes(byte[] x, int start, int end) {
         // corresponding to substring of String for byte[],
         // It is not implement in class library because internal structure of byte[] requires copy.
@@ -31,13 +33,32 @@ public class InformationEstimator implements InformationEstimatorInterface {
     }
 
     // IQ: information quantity for a count, -log2(count/sizeof(space))
+/*
     double iq(int freq) {
+        return  - Math.log10((double) freq / (double) mySpace.length)/ Math.log10((double) 2.0);
+    }
+*/
+    double iq(int start, int end) {
+        myFrequencer.setTarget(subBytes(myTarget, start, end));
+        int freq  = myFrequencer.frequency();
         return  - Math.log10((double) freq / (double) mySpace.length)/ Math.log10((double) 2.0);
     }
 
     @Override
     public void setTarget(byte[] target) {
         myTarget = target;
+	if (mySpace != null && myTarget.length > 0) {
+		estimation_result = new double[myTarget.length];
+		estimation_result[0] = iq(0, 1);
+		for (int i = 1; i < myTarget.length; i++) {
+			double result = iq(0, i+1);
+			for (int j = 0; j < i; j++) {
+				if (result > estimation_result[j] + iq(j+1, i+1))
+					result = estimation_result[j] + iq(j+1, i+1);
+			}
+			estimation_result[i] = result;
+		}
+	}
     }
 
     @Override
@@ -48,6 +69,7 @@ public class InformationEstimator implements InformationEstimatorInterface {
 
     @Override
     public double estimation(){
+/*
         boolean [] partition = new boolean[myTarget.length+1];
         int np = 1<<(myTarget.length-1);
         // System.out.println("np="+np+" length="+myTarget.length);
@@ -87,6 +109,10 @@ public class InformationEstimator implements InformationEstimatorInterface {
             if(value1 < value) value = value1;
         }
         return value;
+*/
+	if (myTarget == null || myTarget.length == 0 ) return 0.0; 
+        if (mySpace == null || Double.isInfinite(estimation_result[myTarget.length-1])) return Double.MAX_VALUE;
+        return estimation_result[myTarget.length-1];
     }
 
     public static void main(String[] args) {

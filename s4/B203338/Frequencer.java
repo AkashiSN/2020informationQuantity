@@ -16,7 +16,8 @@ interface FrequencerInterface {  // This interface provides the design for frequ
 */
 
 
-public class Frequencer implements FrequencerInterface {/*
+public class Frequencer implements FrequencerInterface {
+  /*
     // Code to Test, *warning: This code contains intentional problem*
     byte[] myTarget;
     byte[] mySpace;
@@ -157,30 +158,84 @@ public class Frequencer implements FrequencerInterface {/*
       String target_j_k = new String(myTarget);
       suffix_i = suffix_i.substring(i);
       target_j_k = target_j_k.substring(j,k);
-      if(suffix_i.length()<target_j_k.length()){
+      /*if(suffix_i.length()<target_j_k.length()){
         return -1;
       }
       else{
         if(suffix_i.startsWith(target_j_k)){
           return 0;
         }
+      }*/
+      if(suffix_i.startsWith(target_j_k)){
+        return 0;
       }
-      return 1;
+      else{
+        return suffix_i.compareTo(target_j_k)/Math.abs(suffix_i.compareTo(target_j_k));
+      }
     }
     private int subByteStartIndex(int start, int end) {
-      for(int i = 0;i<suffixArray.length;i++){
+      /*for(int i = 0;i<suffixArray.length;i++){
         if(targetCompare(suffixArray[i],start,end)==0){
           return i;
         }
       }
+      return -1;*/
+      int s = 0;
+      int e = suffixArray.length-1;
+
+      while(s<=e){
+        int m = (s+e)/2;
+        if(targetCompare(suffixArray[m],start,end)==0){
+          //search
+          try{
+            while(targetCompare(suffixArray[--m],start,end)==0);
+            return m+1;
+          }
+          catch(Exception ex){
+            return 0;
+          }
+        }
+        else if(targetCompare(suffixArray[m],start,end)==-1){
+          s=m+1;
+        }
+        else if(targetCompare(suffixArray[m],start,end)==1){
+          e=m-1;
+        }
+      }
+      System.out.println("404");
       return -1;
     }
     private int subByteEndIndex(int start, int end) {
-      for(int i = suffixArray.length-1;i>=0;i--){
+      /*for(int i = suffixArray.length-1;i>=0;i--){
         if(targetCompare(suffixArray[i],start,end)==0){
           return i+1;
         }
       }
+      return -1;*/
+      int s = 0;
+      int e = suffixArray.length-1;
+
+      while(s<=e){
+        int m = (s+e)/2;
+        if(targetCompare(suffixArray[m],start,end)==0){
+          //search
+          try{
+            while(targetCompare(suffixArray[m++],start,end)==0);
+            return m-1;
+          }
+          catch(Exception ex){
+            return suffixArray.length;
+          }
+
+        }
+        else if(targetCompare(suffixArray[m],start,end)==-1){
+          s=m+1;
+        }
+        else if(targetCompare(suffixArray[m],start,end)==1){
+          e=m-1;
+        }
+      }
+      System.out.println("404");
       return -1;
     }
     public static void main(String[] args) {
@@ -217,9 +272,13 @@ public class Frequencer implements FrequencerInterface {/*
         result = frequencerObject.frequency();
         if(2 == result) { System.out.println("The Frequency of the starting word    Ho is 2 and it appeared "+result+" times\nOK!"); } else
         {System.out.println("The Frequency of the starting word    Ho is 2 and it appeared "+result+" times\nWRONG"); }
+        frequencerObject.setTarget("o H".getBytes());
+        result = frequencerObject.frequency();
+        if(1 == result) { System.out.println("The Frequency of the starting word o H is 2 and it appeared "+result+" times\nOK!"); } else
+        {System.out.println("The Frequency of the starting word  o H is 1 and it appeared "+result+" times\nWRONG"); }
       }
       catch(Exception e) {
-        System.out.println("STOP");
+        System.out.println("STOP"+e);
       }
     }
 }

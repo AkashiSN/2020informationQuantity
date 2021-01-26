@@ -37,7 +37,12 @@ public class TestCase {
 	    FrequencerInterface  myObject;
 	    int freq;
 		    c = 0;
-	    System.out.println("checking Frequencer");
+		System.out.println("checking Frequencer");
+		/*myObject = new Frequencer();
+	    myObject.setSpace("sahjdfhauifhsabgjhagbsbghjvfdsbjghvbeq834tratf8aydusfg84tvf7634atgavftwu43fgg7267623462356287gfg8vf6ttf3847tvf6872twev76ftb238ft7863tcfgf8vb672tr7t23r87vtf72t86rvtt78ft7823avkugf7ag4mgkmagu6fvgb4au6egafvutb4wktf84q37vvtfrb84ttfia438itvftav843itbf8iva438iaftvi8473ibt7vtif7it7a4ivft7ait3kygvs874ta8tr843lpq1747cbuf 452fg".getBytes());
+	    myObject.setTarget("".getBytes());
+	    freq = myObject.frequency();*/
+
 	    myObject = new Frequencer();
 	    freq = myObject.frequency();
 	    if(-1 != freq) { System.out.println("frequency() should return -1, when target is not set, but returns "+freq); c++; }
@@ -121,7 +126,7 @@ public class TestCase {
 	    System.out.println("Exception occurred in Frequencer Object: STOP");
 	    c++;
 	}
-/*
+
 	try {
 	    InformationEstimatorInterface myObject;
 	    double value;
@@ -144,8 +149,7 @@ public class TestCase {
 	catch(Exception e) {
 	    System.out.println("Exception occurred: STOP");
 	    c++;
-	}*/
+	}
 	if(c == 0) { System.out.println("TestCase OK"); }
     }
-}	    
-	    
+}

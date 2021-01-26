@@ -235,12 +235,24 @@ public class Frequencer implements FrequencerInterface{
         // if target_start_end is "Ho ", it will return 6.                
         //                                                                          
         // ここにコードを記述せよ。                                                 
-        
-        for (int i = 0; i < suffixArray.length; i++) {
-            if (targetCompare(suffixArray[i], start, end) == 0) return i;
+        // 二分探索
+        int left = 0;
+        int right = suffixArray.length - 1;
+        int mid;
+        int result;
+        int foundIndex = -1;
+        while (left < right) {
+            mid = (left + right) / 2;
+            result = targetCompare(suffixArray[mid], start, end);
+            if (result == -1) left = mid + 1;
+            else if (result == 1) right = mid - 1;
+            else if (result == 0) {  // 出現位置を記録して左側を探索
+                foundIndex = mid;
+                right = mid - 1;
+            }
         }
-                                                   
-        return -1; //このコードは変更しなければならない。          
+
+        return foundIndex;
     }
 
     private int subByteEndIndex(int start, int end) {
@@ -271,11 +283,24 @@ public class Frequencer implements FrequencerInterface{
         // if target_start_end is"i", it will return 9 for "Hi Ho Hi Ho".    
         //                                                                   
         //　ここにコードを記述せよ                                           
-        for (int i = suffixArray.length - 1; i > 0; i--) {
-            if (targetCompare(suffixArray[i], start, end) == 0) return i + 1;
+        // 二分探索
+        int left = 0;
+        int right = suffixArray.length - 1;
+        int mid;
+        int result;
+        int foundIndex = -1;
+        while (left < right) {
+            mid = (left + right) / 2;
+            result = targetCompare(suffixArray[mid], start, end);
+            if (result == -1) left = mid + 1;
+            else if (result == 1) right = mid - 1;
+            else if (result == 0) {  // 出現位置を記録して右側を探索
+                foundIndex = mid;
+                left = mid + 1;
+            }
         }
 
-        return -1; // この行は変更しなければならない、       
+        return foundIndex + 1;
     }
 
 

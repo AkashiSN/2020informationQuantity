@@ -22,6 +22,11 @@ public class InformationEstimator implements InformationEstimatorInterface {
     byte[] mySpace;  // Sample space to compute the probability
     FrequencerInterface myFrequencer;  // Object for counting frequency
 
+    boolean targetReady = false;
+    boolean spaceReady = false;
+    boolean iqReady = false;
+    double [] iq;
+
     byte[] subBytes(byte[] x, int start, int end) {
         // corresponding to substring of String for byte[],
         // It is not implement in class library because internal structure of byte[] requires copy.
@@ -38,16 +43,30 @@ public class InformationEstimator implements InformationEstimatorInterface {
     @Override
     public void setTarget(byte[] target) {
         myTarget = target;
+        iqReady = false;
+        if(myTarget.length > 0){
+            targetReady = true;
+            iq = new double[myTarget.length];
+        }
     }
 
     @Override
     public void setSpace(byte[] space) {
         myFrequencer = new Frequencer();
         mySpace = space; myFrequencer.setSpace(space);
+        iqReady = false;
+        if(mySpace.length > 0)
+            spaceReady = true;
     }
 
     @Override
     public double estimation(){
+        if(targetReady == false)
+            return 0.0;
+        if(spaceReady == false)
+            return Double.MAX_VALUE;
+        
+    /*
         boolean [] partition = new boolean[myTarget.length+1];
         int np = 1<<(myTarget.length-1);
         // System.out.println("np="+np+" length="+myTarget.length);
@@ -87,6 +106,35 @@ public class InformationEstimator implements InformationEstimatorInterface {
             if(value1 < value) value = value1;
         }
         return value;
+    */
+        double value = Double.MAX_VALUE;
+        double value1 = 0;
+
+        if(iqReady == false){
+            for(int i=1; i<=myTarget.length; i++){
+                myFrequencer.setTarget(subBytes(myTarget, 0, i));
+                iq[i-1] = iq(myFrequencer.frequency());
+                if(i > 1){
+                    double min = iq[i-1];
+                    double sum = 0;
+                    for(int j=1; j<i; j++){
+                        sum = 0;
+                        sum += iq[j-1];
+                        myFrequencer.setTarget(subBytes(myTarget, j, i));
+                        sum += iq(myFrequencer.frequency());
+                        if(min > sum)
+                            min = sum;
+                    }
+                    iq[i-1] = min;
+                }
+            }
+            iqReady = true;
+        }
+
+        if(value > iq[myTarget.length-1])
+            value = iq[myTarget.length-1];
+        return value;
+        
     }
 
     public static void main(String[] args) {

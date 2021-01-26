@@ -48,25 +48,26 @@ public class TestCase {
 	    
 		// Write your testCase here
 		if(freq >= 0 ){
-			System.out.printon("Not Error");
-			if(freq == 4)
-				System.out.printon("The result is correct");
+			System.out.println("Not Error");
+			if(freq == 4){
+				System.out.println("The result is correct");
 			}else if(freq != 4){
-				System.out.printon("The result is wrong");
+				System.out.println("The result is wrong");
 			}
 		}else{
-			System.out.printon("Error");
+			System.out.println("Error");
 		}
 
 		freq = myObject.subByteFrequency(0, 10);
 		if(freq >= 0){
-			System.out.printon("Not Error");
+			System.out.println("Not Error");
 		}else{
-			System.out.printon("Error");
+			System.out.println("Error");
 		}
 
 
 		/*
+		//There is a mistake in the part of
 		for(int start = 0; start<spaceLength; start++) { // Is it OK?
 			boolean abort = false;
 			for(int i = 0; i<targetLength; i++) {
@@ -75,16 +76,15 @@ public class TestCase {
 			if(abort == false) { count++; }
         }
 
-		の部分にミスが存在し、
-		例えば、
-		　start=spaceLength-1　かつ　targetLength=2　のとき
-			if(myTarget[i] != mySpace[start+i])の部分が
-			　　if(myTarget[i] != mySpace[spaceLength-1+1])
-			　　if(myTarget[i] != mySpace[spaceLength])
-			となるので、
-			　　mySpace[spaceLength]
-			が配列の範囲外を参照する恐れがある。
-		*/
+		//For example
+		// if start=spaceLength-1 AND targetLength=2
+		// Part if(myTarget[i] != mySpace[Start+i]) Is
+		      if(myTarget[i] != mySpace[Start-1+1])
+			  if(myTarget[i] != mySpace[Start])
+	    //because it becomes
+		   mySpace[spaceLength]
+		//May refer to outside the range of the array
+	    */
 
 		myObject = new Frequencer();
 	    myObject.setSpace("AAA aaa AAA aa".getBytes());

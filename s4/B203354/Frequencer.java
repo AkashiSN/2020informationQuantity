@@ -1,5 +1,6 @@
 package s4.B203354;  // ここは、かならず、自分の名前に変えよ。
 import java.lang.*;
+import java.util.Random;
 import s4.specification.*;
 
 
@@ -71,16 +72,15 @@ public class Frequencer implements FrequencerInterface{
         // if suffix_i = suffix_j, it returns 0;   
 
         // ここにコードを記述せよ
+        if (i == j) return 0;
         while (i < mySpace.length && j < mySpace.length) {
             if (mySpace[i] > mySpace[j]) return 1;
-            else if (mySpace[i] < mySpace[j]) return -1; 
+            else if (mySpace[i] < mySpace[j]) return -1;
             i++;
             j++;
         }
-        if (i < j) return 1;
-        else if (i > j) return -1;
-
-        return 0; // この行は変更しなければいけない。 
+        if (j == mySpace.length) return 1;
+        else return -1;
     }
 
     public void setSpace(byte []space) { 
@@ -110,16 +110,18 @@ public class Frequencer implements FrequencerInterface{
         // のようになるべきである。
 
         // バブルソート
-        for (int i = 0; i < suffixArray.length - 1; i++) {
-            for (int j = suffixArray.length - 1; j > i; j--) {
-                // 辞書順になっていなかったら交換
-                if (suffixCompare(suffixArray[j - 1], suffixArray[j]) == 1) {
-                    int temp = suffixArray[j - 1];
-                    suffixArray[j - 1] = suffixArray[j];
-                    suffixArray[j] = temp;
-                }
-            }
-        }
+//        for (int i = 0; i < suffixArray.length - 1; i++) {
+//            for (int j = suffixArray.length - 1; j > i; j--) {
+//                // 辞書順になっていなかったら交換
+//                if (suffixCompare(suffixArray[j - 1], suffixArray[j]) == 1) {
+//                    int temp = suffixArray[j - 1];
+//                    suffixArray[j - 1] = suffixArray[j];
+//                    suffixArray[j] = temp;
+//                }
+//            }
+//        }
+
+        quickSort(0, suffixArray.length - 1);
     }
 
     // ここから始まり、指定する範囲までは変更してはならないコードである。
@@ -155,7 +157,9 @@ public class Frequencer implements FrequencerInterface{
         // The following the counting method using suffix array.
         // 演習の内容は、適切なsubByteStartIndexとsubByteEndIndexを定義することである。
         int first = subByteStartIndex(start, end);
+//        System.out.println(first);
         int last1 = subByteEndIndex(start, end);
+//        System.out.println(last1);
         return last1 - first;
     }
     // 変更してはいけないコードはここまで。
@@ -194,15 +198,15 @@ public class Frequencer implements FrequencerInterface{
         //    if suffix_i is "Ho Hi Ho", and suffix_j is "Ho", 
         //            suffixCompare should return -1.
         //
-        // ここに比較のコードを書け 
+        // ここに比較のコードを書け
         while (i < mySpace.length && j < k) {
             if (mySpace[i] > myTarget[j]) return 1;
             else if (mySpace[i] < myTarget[j]) return -1;
             i++;
             j++;
         }
-
-        return 0; // この行は変更しなければならない。
+        if (j == k) return 0;
+        else return -1;
     }
 
     private int subByteStartIndex(int start, int end) {
@@ -234,11 +238,12 @@ public class Frequencer implements FrequencerInterface{
         // if target_start_end is "Ho ", it will return 6.                
         //                                                                          
         // ここにコードを記述せよ。
-        for (int i = 0; i < suffixArray.length; i++) {
-            if (targetCompare(suffixArray[i], start, end) == 0) return i;
-        }
+//        for (int i = 0; i < suffixArray.length; i++) {
+//            if (targetCompare(suffixArray[i], start, end) == 0) return i;
+//        }
+//
+//        return -1;
 
-        return -1;
 //        int middle = (left + right) / 2;
 //        if (right < left) return -1;
 //
@@ -252,6 +257,7 @@ public class Frequencer implements FrequencerInterface{
 //        else {
 //            return binarySearch(middle + 1, right, start, end);
 //        }
+        return binarySearchForStart(start, end, 0, suffixArray.length - 1);
     }
 
     private int subByteEndIndex(int start, int end) {
@@ -282,11 +288,102 @@ public class Frequencer implements FrequencerInterface{
         // if target_start_end is"i", it will return 9 for "Hi Ho Hi Ho".    
         //                                                                   
         //　ここにコードを記述せよ                                           
-        for (int i = suffixArray.length - 1; i > 0; i--) {
-            if (targetCompare(suffixArray[i], start, end) == 0) return i + 1;
-        }
+//        for (int i = suffixArray.length - 1; i > 0; i--) {
+//            if (targetCompare(suffixArray[i], start, end) == 0) return i + 1;
+//        }
+//
+//        return -1; // この行は変更しなければならない、
 
-        return -1; // この行は変更しなければならない、       
+         return binarySearchForEnd(start, end, 0, suffixArray.length - 1);
+
+    }
+
+    public int random(int min, int max) {
+        return new Random().nextInt(max - min + 1) + min;
+    }
+
+    public void quickSort(int left, int right) {
+        if (left >= right) return;
+
+        int pivot = random(left, right);
+        int tmp;
+
+        tmp = suffixArray[pivot];
+        suffixArray[pivot] = suffixArray[left];
+        suffixArray[left] = tmp;
+
+        int p = left;
+        int k = left + 1;
+        while (k <= right) {
+            if (suffixCompare(suffixArray[k], suffixArray[left]) < 0) {
+                tmp = suffixArray[k];
+                suffixArray[k] = suffixArray[p + 1];
+                suffixArray[p + 1] = tmp;
+                p++;
+            }
+            k++;
+        }
+        tmp = suffixArray[left];
+        suffixArray[left] = suffixArray[p];
+        suffixArray[p] = tmp;
+
+        quickSort(left, p - 1);
+        quickSort(p + 1, right);
+    }
+
+    public int binarySearchForStart(int start, int end, int left, int right) {
+        int mid = (left + right) / 2;
+        if (left > right) return -1;
+        else if (left == 0 && right == 0) {
+            if (targetCompare(suffixArray[0], start, end) == 0) return 0;
+            else return -1;
+        }
+        else if (left == 0 && right == 1) mid = 1;
+//        else if(mid == 0) {
+//            if (left == 0 && right == 0 && targetCompare(suffixArray[mid], start, end) == 0)
+//                return mid;
+//            else if (left == 0 && right == 1 && )
+//        }
+
+        int result1 = targetCompare(suffixArray[mid], start, end);
+        int result2 = targetCompare(suffixArray[mid - 1], start, end);
+        if (result1 > 0) {
+            return binarySearchForStart(start, end, left, mid - 1);
+        }
+        else if (result1 < 0) {
+            return binarySearchForStart(start, end, mid + 1, right);
+        }
+        else if (result1 == 0 && result2 == 0) {
+            return binarySearchForStart(start, end, left, mid - 1);
+        }
+        else {
+            return mid;
+        }
+    }
+
+    public int binarySearchForEnd(int start, int end, int left, int right) {
+        int mid = (left + right) / 2;
+        if (left > right) return -1;
+        else if (left == suffixArray.length - 1 && right == suffixArray.length - 1) {
+            if (targetCompare(suffixArray[suffixArray.length - 1], start, end) == 0) return suffixArray.length;
+            else return -1;
+        }
+//        else if (mid == suffixArray.length - 1) return mid + 1;
+
+        int result1 = targetCompare(suffixArray[mid], start, end);
+        int result2 = targetCompare(suffixArray[mid + 1], start, end);
+        if (result1 > 0) {
+            return binarySearchForEnd(start, end, left, mid - 1);
+        }
+        else if (result1 < 0) {
+            return binarySearchForEnd(start, end, mid + 1, right);
+        }
+        else if (result1 == 0 && result2 == 0) {
+            return binarySearchForEnd(start, end, mid + 1, right);
+        }
+        else {
+            return mid + 1;
+        }
     }
 
     // Suffix Arrayを使ったプログラムのホワイトテストは、
@@ -330,14 +427,14 @@ public class Frequencer implements FrequencerInterface{
               10:o Hi Ho                     
             */
 
-            frequencerObject.setTarget("H".getBytes());
+            frequencerObject.setTarget("".getBytes());
             //                                         
             // ****  Please write code to check subByteStartIndex, and subByteEndIndex
             //
 
             int result = frequencerObject.frequency();
             System.out.print("Freq = "+ result+" ");
-            if(4 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
+//            if(4 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
         }
         catch(Exception e) {
             e.printStackTrace();

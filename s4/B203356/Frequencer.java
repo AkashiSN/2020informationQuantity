@@ -71,22 +71,21 @@ public class Frequencer implements FrequencerInterface{
         // if suffix_i = suffix_j, it returns 0;   
 
         // ここにコードを記述せよ 
-        //                                 
-
+        //                     
+        
+        while(i<mySpace.length && j<mySpace.length && mySpace[i]==mySpace[j]){
+            i++;j++;
+        }
         if(i==mySpace.length){
             if(j==mySpace.length)
                 return 0;
             return -1;
         }else if(j==mySpace.length)
             return 1;
-        else if(mySpace[i]==mySpace[j]){
-            return suffixCompare(i+1, j+1);
-        }else if(mySpace[i]<mySpace[j])
+        else if(mySpace[i]<mySpace[j])
             return -1;
         else
             return 1;
-
-        //return 0; // この行は変更しなければいけない。 
     }
 
     public void setSpace(byte []space) { 
@@ -115,19 +114,45 @@ public class Frequencer implements FrequencerInterface{
         //   suffixArray[ 2]= 0:CBA
         // のようになるべきである。
 
-        int compare;
-        int temp;
-        for(int i=0;i<space.length-1;i++){
-            for(int j=space.length-1;j>i;j--){
-                compare = suffixCompare(suffixArray[j-1],suffixArray[j]);
-                if(compare>0){
-                    temp=suffixArray[j];
-                    suffixArray[j]=suffixArray[j-1];
-                    suffixArray[j-1]=temp;
-                }
+        //long starttime=System.nanoTime();
+
+        for (int i = space.length /2 -1; i>=0; i--){
+            heap(i, space.length);
+        }
+        for (int i = space.length-1 ; i>=0; i --){
+            if (suffixCompare(suffixArray[0],suffixArray[i])>0) {
+                int tmp = suffixArray[0];
+                suffixArray[0] = suffixArray[i];
+                suffixArray[i] = tmp;
+
+                heap(0, i-1);
             }
         }
+        //long endtime=System.nanoTime();
+        //System.out.println("time:"+(endtime-starttime));
 
+    }
+
+    private void heap(int root, int n){
+        int largest = root;
+        int left = 2 * root + 1;
+        int right = 2 * root + 2;
+
+        if (left < n && suffixCompare(suffixArray[left],suffixArray[largest])>0){
+            largest = left;
+        }
+
+        if (right < n && suffixCompare(suffixArray[right],suffixArray[largest])>0){
+            largest = right;
+        }
+
+        if (largest != root){
+            int swap = suffixArray[root];
+            suffixArray[root] = suffixArray[largest];
+            suffixArray[largest] = swap;
+
+            heap(largest, n );
+        }
     }
 
     // ここから始まり、指定する範囲までは変更してはならないコードである。
@@ -207,10 +232,9 @@ public class Frequencer implements FrequencerInterface{
 
         int suffixNum = suffixArray[i];
 
-        if( (mySpace.length-suffixNum ) < (k-j) ) 
-            return -1;
+        
         if(j>=k)
-            return 0;
+            return 1;
         
         while(j!=k){
             if(mySpace[suffixNum] < myTarget[j])
@@ -219,6 +243,12 @@ public class Frequencer implements FrequencerInterface{
                 return 1;
             j++;
             suffixNum++;
+            if(suffixNum==mySpace.length){
+                if(j==k)
+                    return 0;
+                else
+                    return -1;
+            }
         }
         return 0; 
         
@@ -256,6 +286,9 @@ public class Frequencer implements FrequencerInterface{
         //                                                                          
         // ここにコードを記述せよ。                                                 
         //
+
+        if(start>=end)
+            return 1;
 
         int upper = suffixArray.length-1;
         int lower = 0;
@@ -315,6 +348,8 @@ public class Frequencer implements FrequencerInterface{
         //                                                                   
         //　ここにコードを記述せよ                                           
         //
+        if(start>=end)
+            return 0;
 
         int upper = suffixArray.length-1;
         int lower = 0;
@@ -329,10 +364,8 @@ public class Frequencer implements FrequencerInterface{
                 if(targetCompare(mid+1, start, end) !=0 )
                     return mid+1;
                 lower=mid+1;
-            }else{
-                if(mid==0)
-                    return 0; 
-                if(targetCompare(mid-1, start,end)==0)
+            }else{ 
+                if(mid>0 && targetCompare(mid-1, start,end)==0)
                     return mid;
                 if(midRes>0)
                     upper=mid-1;
@@ -366,10 +399,10 @@ public class Frequencer implements FrequencerInterface{
             frequencerObject.printSuffixArray();
             frequencerObject = new Frequencer();
             frequencerObject.setSpace("HHH".getBytes());
-            frequencerObject.printSuffixArray();*/
+            frequencerObject.printSuffixArray();
             frequencerObject = new Frequencer();
-            //frequencerObject.setSpace("Hi Ho Hi Ho".getBytes());
-            //frequencerObject.printSuffixArray();
+            frequencerObject.setSpace("Hi Ho Hi Ho".getBytes());
+            frequencerObject.printSuffixArray();*/
             /* Example from "Hi Ho Hi Ho"    
                0: Hi Ho                      
                1: Ho                         
@@ -384,14 +417,26 @@ public class Frequencer implements FrequencerInterface{
               10:o Hi Ho                     
             */
 
-            frequencerObject.setTarget("H".getBytes());
+            //frequencerObject.setTarget("a".getBytes());
             //                                         
             // ****  Please write code to check subByteStartIndex, and subByteEndIndex
             //
+            /*frequencerObject = new Frequencer();
+            frequencerObject.setSpace("Hi Ho Hi Ho".getBytes());
+            frequencerObject.setTarget("a".getBytes());
+            System.out.println("start : " + frequencerObject.subByteStartIndex(0, frequencerObject.myTarget.length));
+            System.out.println("end : " + frequencerObject.subByteEndIndex(0, frequencerObject.myTarget.length));*/
 
-            int result = frequencerObject.frequency();
-            System.out.print("Freq = "+ result+" ");
-            if(4 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
+            frequencerObject = new Frequencer();
+            frequencerObject.setSpace("btori".getBytes());
+            frequencerObject.setTarget("atoriii".getBytes());
+            System.out.println("start : " + frequencerObject.subByteStartIndex(0, 7));
+            System.out.println("end : " + frequencerObject.subByteEndIndex(0, 7));
+            frequencerObject.printSuffixArray();
+
+            int result = frequencerObject.subByteFrequency(0,7);
+            System.out.println("Freq = "+ result+" ");
+            //if(4 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
         }
         catch(Exception e) {
             System.out.println("STOP");

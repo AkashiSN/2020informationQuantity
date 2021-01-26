@@ -48,7 +48,36 @@ public class InformationEstimator implements InformationEstimatorInterface {
 
     @Override
     public double estimation(){
-        boolean [] partition = new boolean[myTarget.length+1];
+        double [] iqResult = new double[myTarget.length];
+
+        if (myTarget.length == 0)
+            return 0.0;
+
+        if (mySpace.length == 0)
+            return Double.MAX_VALUE;
+
+        for (int i = 0; i < myTarget.length; i++) { 
+            iqResult[i] = Double.MAX_VALUE;
+            //先頭からn番目までの計算結果を配列のn-1番目に保存(分割されていない場合)
+            myFrequencer.setTarget(subBytes(myTarget, 0, i+1)); 
+            double value = iq(myFrequencer.frequency());
+
+            if (value < iqResult[i])
+                iqResult[i] = value;
+
+            //それ以前の文字までの分割と、n番目の文字の情報量を合計する(i番目以前のいずれかで分割されている場合)
+            for (int j = i - 1; j >= 0; j--) {
+                myFrequencer.setTarget(subBytes(myTarget, j+1, i+1));
+                value = iqResult[j] + iq(myFrequencer.frequency());
+
+                //より小さいものがあれば更新
+                if (value < iqResult[i])
+                    iqResult[i] = value;
+            }
+        }
+        return iqResult[myTarget.length-1];
+
+       /*boolean [] partition = new boolean[myTarget.length+1];
         int np = 1<<(myTarget.length-1);
         // System.out.println("np="+np+" length="+myTarget.length);
         double value = Double.MAX_VALUE; // value = mininimum of each "value1".
@@ -70,23 +99,23 @@ public class InformationEstimator implements InformationEstimatorInterface {
             int end = 0;
             int start = end;
             while(start<myTarget.length) {
-                // System.out.write(myTarget[end]);
+                 System.out.write(myTarget[end]);
                 end++;;
                 while(partition[end] == false) {
-                    // System.out.write(myTarget[end]);
+                     System.out.write(myTarget[end]);
                     end++;
                 }
-                // System.out.print("("+start+","+end+")");
+                 System.out.print("("+start+","+end+")");
                 myFrequencer.setTarget(subBytes(myTarget, start, end));
                 value1 = value1 + iq(myFrequencer.frequency());
                 start = end;
             }
-            // System.out.println(" "+ value1);
+             System.out.println(" "+ value1);
 
             // Get the minimal value in "value"
             if(value1 < value) value = value1;
         }
-        return value;
+        return value;*/
     }
 
     public static void main(String[] args) {

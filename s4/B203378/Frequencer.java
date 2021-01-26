@@ -1,4 +1,4 @@
-package s4.B203378;  // ここは、かならず、自分の名前に変えよ。
+package s4.B203379;  // ここは、かならず、自分の名前に変えよ。
 import java.lang.*;
 import s4.specification.*;
 
@@ -303,7 +303,7 @@ public class Frequencer implements FrequencerInterface{
         int lower = 0;
         int upper = suffixArray.length - 1;
         int middle;
-        int t = mySpace.length;
+        int t = mySpace.length+1;
 
         while (lower <= upper) {
             middle = (lower + upper)/2;
@@ -322,7 +322,7 @@ public class Frequencer implements FrequencerInterface{
                 lower = middle + 1;
             }
         }
-        
+
         return t;//このコードは変更しなければならない。
     }
 
@@ -423,15 +423,14 @@ public class Frequencer implements FrequencerInterface{
                9:o
               10:o Hi Ho
             */
-
-            frequencerObject.setTarget("H".getBytes());
+            frequencerObject.setTarget("Hi".getBytes());
             //
             // ****  Please write code to check subByteStartIndex, and subByteEndIndex
             //
 
             int result = frequencerObject.frequency();
             System.out.print("Freq = "+ result+" ");
-            if(4 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
+            if(2 == result) { System.out.println("OK"); } else {System.out.println("WRONG"); }
         }
         catch(Exception e) {
             System.out.println("STOP");

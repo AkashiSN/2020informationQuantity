@@ -2,7 +2,7 @@ package s4.B203309; // Please modify to s4.Bnnnnnn, where nnnnnn is your student
 import java.lang.*;
 import s4.specification.*;
 /*package	s4.specification;
-ここは、１回、２回と変更のない外部仕様である。
+This is an external specification that does not change once or twice.
 public	interface	FrequencerInterface	{					//	This	interface	provides	the	design	for
 frequency	counter.
 void	setTarget(byte		target[]);	//	set	the	data	to	search.
@@ -23,7 +23,7 @@ public class Frequencer implements FrequencerInterface {
   byte  []  mySpace;
   boolean targetReady = false;
   boolean spaceReady  = false;
-  int []    suffixArray;          //	Suffix	Array の実装に使うデータの型を int	[]とせよ。
+  int []    suffixArray;          //	Let the data type used to implement the Suffix Array be int [].
   //	The	variable,	"suffixArray"	is	the	sorted	array	of	all	suffixes	of	mySpace.
   //	Each	suffix	is	expressed	by	a	integer,	which	is	the	starting	position	in	mySpace.
   //	The	following	is	the	code	to	print	the	contents	of	suffixArray.
@@ -40,8 +40,8 @@ public class Frequencer implements FrequencerInterface {
     }
   }
   private int suffixCompare(int i,  int j)  {
-    //	suffixCompare はソートのための比較メソッドである。
-    //	次のように定義せよ。
+    //	suffixCompare is a comparison method for sorting.
+    //	Define it as follows.
     //	comparing	two	suffixes	by	dictionary	order.
     //	suffix_i	is	a	string	starting	with	the	position	i	in	"byte	[]	mySpace".
     //	Each	i	and	j	denote	suffix_i,	and	suffix_j.
@@ -56,6 +56,24 @@ public class Frequencer implements FrequencerInterface {
     //	if	suffix_i	=	suffix_j,	it	returns	0;
 	
 	
+
+	while(true){
+		if(mySpace[i] > mySpace[j])
+		  return 1;
+		else if(mySpace[i] < mySpace[j])
+		  return -1;
+		else{
+		  if(i+1 <= mySpace.length-1 && j+1 <= mySpace.length-1){
+		  	  i++;
+			  j++;
+		  }
+		  else if(j+1 <= mySpace.length-1)
+			return -1;
+		  else return 1;
+		}	
+	}
+
+	/*
     if(mySpace[i] > mySpace[j])
       return 1;
     else if(mySpace[i] < mySpace[j])
@@ -66,7 +84,7 @@ public class Frequencer implements FrequencerInterface {
       else if(j+1 <= mySpace.length-1)
         return -1;
       else return 1;
-    }
+    }*/
 	
 	/*
 	if(mySpace[i] > mySpace[j]) return 1;
@@ -79,7 +97,7 @@ public class Frequencer implements FrequencerInterface {
   }
 
   public void  setSpace(byte [] space)  {
-    //	suffixArray の前処理は、setSpace で定義せよ。
+    //	Define the preprocessing of suffixArray with setSpace.
     mySpace = space;
     if(mySpace.length>0)
     spaceReady  = true;
@@ -91,7 +109,7 @@ public class Frequencer implements FrequencerInterface {
     }
 
 	/*
-	//ペアプログラムで実装したコード(バブルソート)
+	//Code implemented in a pair program (bubble sort)
     for(int i = 0; i < space.length - 1; i++) {
       for(int j = i + 1; j < space.length; j++) {
         if(suffixCompare(suffixArray[i], suffixArray[j]) == 1) {
@@ -103,14 +121,14 @@ public class Frequencer implements FrequencerInterface {
     }
 	*/
 
-	//(week4,3-2)各自で高速化(クイックソート)
+	//(week4,3-2) Speed up by yourself (quicksort)
 	int left=0;
 	int right=space.length-1;
 	quickSort(suffixArray,left,right);
 	
   }
 
-  //クイックソート(追加,week4,3-2)
+  //Quicksort (additional, week4,3-2)
   private void quickSort(int [] list, int left, int right){
 	int i, last;
     int temp;
@@ -136,8 +154,8 @@ public class Frequencer implements FrequencerInterface {
     quickSort(list, last+1, right);
   }
 
-  //	Suffix	Array を用いて、文字列の頻度を求めるコード
-  //	ここから、指定する範囲のコードは変更してはならない。
+  //	Code to find the frequency of strings using Suffix Array
+  //	From here, the code in the specified range must not be changed.
   public void  setTarget(byte  []  target) {
     myTarget  = target; if(myTarget.length>0) targetReady = true;
   }
@@ -164,10 +182,10 @@ public class Frequencer implements FrequencerInterface {
     int last1 = subByteEndIndex(start,  end);
     return last1 - first;
   }
-//	変更してはいけないコードはここまで。
+//	This is the code that should not be changed.
 private int targetCompare(int i,  int j,  int k)  {
-  //	suffixArray を探索するときに使う比較関数。
-  //	次のように定義せよ
+  //	A comparison function used when searching for a suffixArray.
+  //	Define it as follows
   //	suffix_i	is	a	string	in	mySpace	starting	at	i-th	position.
   //	target_i_k	is	a	string	in	myTarget	start	at	j-th	postion	ending	k-th	position.
   //	comparing	suffix_i	and	target_j_k.
@@ -187,11 +205,11 @@ private int targetCompare(int i,  int j,  int k)  {
   //	"Ho"						=					"Ho"
   //	"Ho"						<					"Ho	"			:	"Ho	"	is	not	in	the	head	of	suffix	"Ho"
   //	"Ho"						=					"H"					:	"H"	is	in	the	head	of	suffix	"Ho"
-  //	ここに比較のコードを書け
+  //	Write the comparison code here
 
 
 /*
-  //ペアプログラムで実装したコード
+  //Code implemented in a pair program
   int start_j = j;
   for(int idx = 0; idx < k - start_j; idx++, j++){    
     if(suffixArray[i] + idx >= mySpace.length)
@@ -204,11 +222,11 @@ private int targetCompare(int i,  int j,  int k)  {
   return 0;
 */
 
-  //一部修正
+  //Partially modified
   int start_j = j;
   for(int idx = 0; idx < k - start_j; idx++, j++){    
     if(suffixArray[i] + idx >= mySpace.length)
-      return -1;// 1 →　-1
+      return -1;//1 -> -1
   	if(mySpace[suffixArray[i] + idx] >  myTarget[j])
 		  return 1;
    if(mySpace[suffixArray[i]  + idx] <  myTarget[j])
@@ -217,8 +235,8 @@ private int targetCompare(int i,  int j,  int k)  {
   return 0;
 }
 private int subByteStartIndex(int start,  int end)  {
-  //suffix	array のなかで、目的の文字列の出現が始まる位置を求めるメソッド
-  //	以下のように定義せよ。
+  //A method to find the position where the target character string starts to appear in the suffix array
+  //	Define it as follows.
   /*	Example	of	suffix	created	from	"Hi	Ho	Hi	Ho"
   0:	Hi	Ho
   1:	Ho
@@ -239,11 +257,11 @@ private int subByteStartIndex(int start,  int end)  {
   //	Assuming	the	suffix	array	is	created	from	"Hi	Ho	Hi	Ho",
   //	if	target_start_end	is	"Ho	",	it	will	return	6.
   //
-  //	ここにコードを記述せよ。
+  //	Write your code here.
   //
 
   /*
-  //ペアプログラムで実装したコード
+  //Code implemented in a pair program
   for(int i = 0; i < mySpace.length; i++){
     if(targetCompare(i, start, end) == 0)
       return i;
@@ -251,7 +269,7 @@ private int subByteStartIndex(int start,  int end)  {
   return -1;
   */
   
-  //(week4,3-1)各自での二部探索実装
+  //(week4,3-1) Implementation of two-part search by yourself
   int lower=0;
   int upper=mySpace.length-1;
   while(lower <= upper){
@@ -275,8 +293,8 @@ private int subByteStartIndex(int start,  int end)  {
   return -1;
 }
 private int subByteEndIndex(int start,  int end)  {
-  //suffix	array のなかで、目的の文字列の出現しなくなる場所を求めるメソッド
-  //	以下のように定義せよ。
+  //A method to find the place where the target string does not appear in the suffix array
+  //	Define it as follows.
   /*	Example	of	suffix	created	from	"Hi	Ho	Hi	Ho"
   0:	Hi	Ho
   1:	Ho
@@ -299,11 +317,11 @@ private int subByteEndIndex(int start,  int end)  {
 
   //	if	target_start_end	is"i",	it	will	return	9	for	"Hi	Ho	Hi	Ho".
   //
-  // ここにコードを記述せよ
+  // Write your code here
   //
 
   /*
-  //ペアプログラムで実装したコード
+  //Code implemented in a pair program
   for(int j = mySpace.length - 1; j >= 0; j--){
   	if(targetCompare(j, start, end) == 0)
     	return j + 1;
@@ -311,7 +329,7 @@ private int subByteEndIndex(int start,  int end)  {
   return -1;
   */
 
-  //(week4,3-1)各自での二部探索実装
+  // (week4,3-1) Implement your own two-part search
   int lower=0;
   int upper=mySpace.length-1;
   while(lower <= upper){
@@ -334,16 +352,8 @@ private int subByteEndIndex(int start,  int end)  {
   }
   return -1;
 }
-//	Suffix	Array を使ったプログラムのホワイトテストは、
-//	private なメソッドとフィールドをアクセスすることが必要なので、
-//	クラスに属する static	main に書く方法もある。
-//	static	main があっても、呼びださなければよい。
-//	以下は、自由に変更して実験すること。
-//	注意：標準出力、エラー出力にメッセージを出すことは、
-//	static	main からの実行のときだけに許される。
-//	外部から Frequencer を使うときにメッセージを出力してはならない。
-//	教員のテスト実行のときにメッセージがでると、仕様にない動作をするとみなし、
-//	減点の対象である。
+
+
 public static void  main(String[] args) {
   Frequencer frequencerObject;
   try {
@@ -351,7 +361,7 @@ public static void  main(String[] args) {
     // frequencerObject.setSpace("AAA".getBytes());
     frequencerObject.setSpace("Hi Ho Hi Ho".getBytes());
 
-    frequencerObject.printSuffixArray();          //	you	may	use	this	line	for	DEBUG
+    //frequencerObject.printSuffixArray();          //	you	may	use	this	line	for	DEBUG
     /*	Example	from	"Hi	Ho	Hi	Ho"
     0:	Hi	Ho
     1:	Ho

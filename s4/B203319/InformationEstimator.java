@@ -21,6 +21,7 @@ public class InformationEstimator implements InformationEstimatorInterface {
     byte[] myTarget; // data to compute its information quantity
     byte[] mySpace;  // Sample space to compute the probability
     FrequencerInterface myFrequencer;  // Object for counting frequency
+    double[] iqStorage;
 
     byte[] subBytes(byte[] x, int start, int end) {
         // corresponding to substring of String for byte[],
@@ -38,6 +39,7 @@ public class InformationEstimator implements InformationEstimatorInterface {
     @Override
     public void setTarget(byte[] target) {
         myTarget = target;
+
     }
 
     @Override
@@ -46,11 +48,12 @@ public class InformationEstimator implements InformationEstimatorInterface {
         mySpace = space; myFrequencer.setSpace(space);
     }
 
+    /*
     @Override
     public double estimation(){
         boolean [] partition = new boolean[myTarget.length+1];
         int np = 1<<(myTarget.length-1);
-        System.out.println("np="+np+" length="+myTarget.length);
+        //System.out.println("np="+np+" length="+myTarget.length);
         double value = Double.MAX_VALUE; // value = mininimum of each "value1".
 
         for(int p=0; p<np; p++) { // There are 2^(n-1) kinds of partitions.
@@ -87,6 +90,40 @@ public class InformationEstimator implements InformationEstimatorInterface {
             if(value1 < value) value = value1;
         }
         return value;
+        */
+
+    //DP
+    @Override
+    public double estimation(){
+        if(myTarget == null || myTarget.length == 0){
+            return 0;
+        }else if(mySpace == null){
+            return Double.MAX_VALUE;
+        }else{
+            iqStorage = new double[myTarget.length];
+            for(int i=0;i<myTarget.length;i++){
+                //System.out.println(i);
+
+                double value = Double.MAX_VALUE;
+                double value1 = (double) 0.0;
+
+                //一項目を計算
+                myFrequencer.setTarget(subBytes(myTarget, 0, myTarget.length));
+                value1 = iq(myFrequencer.frequency());
+                if(value1 < value) value = value1;
+
+                //search the minimum one
+                for(int j=0;j<i;j++){
+                    myFrequencer.setTarget(subBytes(myTarget, j+1, i+1));
+                    value1 = iqStorage[j]+iq(myFrequencer.frequency());
+                    // Get the minimal value in "value"
+                    if(value1 < value) value = value1;
+                }
+                iqStorage[i] = value;
+            }
+            return iqStorage[myTarget.length-1];
+        }
+
     }
 
     public static void main(String[] args) {

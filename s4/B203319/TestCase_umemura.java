@@ -1,4 +1,4 @@
-package s4.B203319; // Please modify to s4.Bnnnnnn, where nnnnnn is your student ID.
+package s4.umemura; // Please modify to s4.Bnnnnnn, where nnnnnn is your student ID. 
 import java.lang.*;
 import s4.specification.*;
 
@@ -24,8 +24,8 @@ public interface InformationEstimatorInterface{
 // It returns Double.MAX_VALUE, when the true value is infinite, or space is not set.
 // The behavior is undefined, if the true value is finete but larger than Double.MAX_VALUE.
 // Note that this happens only when the space is unreasonably large. We will encounter other problem anyway.
-// Otherwise, estimation of information quantity,
-}
+// Otherwise, estimation of information quantity, 
+}                        
 */
 
 
@@ -47,7 +47,7 @@ public class TestCase {
 	    if(-1 != freq) { System.out.println("frequency() should return -1, when target is empty, but return "+freq); c++; }
 	    myObject = new Frequencer();
 	    myObject.setSpace("AAA".getBytes());
-	    if(-1 != freq) { System.out.println("frequency() for AAA should return -1, when target is  not set. But it returns  "+freq); c++; }
+	    if(-1 != freq) { System.out.println("frequency() for AAA should return -1, when target is  not set. But it returns  "+freq); c++; }	
 	    myObject = new Frequencer();
 	    myObject.setSpace("AAA".getBytes());
 	    myObject.setTarget("".getBytes());
@@ -55,12 +55,12 @@ public class TestCase {
 	    if(-1 != freq) { System.out.println("frequency() for AAA should return -1, when taget empty string. But it returns "+freq); c++; }
 	    myObject = new Frequencer();
 	    myObject.setTarget("A".getBytes());
-	    freq = myObject.frequency();
+	    freq = myObject.frequency();	   
  	    if(0 != freq) { System.out.println("frequency() for not set, should return 0, when taget is not empty. But it returns "+freq); c++; }
 	    myObject = new Frequencer();
 	    myObject.setSpace("".getBytes());
 	    myObject.setTarget("A".getBytes());
-	    freq = myObject.frequency();
+	    freq = myObject.frequency();	   
  	    if(0 != freq) { System.out.println("frequency() for empty space, should return 0, when taget is not empty. But it returns "+freq); c++; }
 	    myObject = new Frequencer();
 	    myObject.setSpace("AAA".getBytes());
@@ -113,8 +113,8 @@ public class TestCase {
 	    myObject.setSpace("AAAB".getBytes());
 	    myObject.setTarget("AAAAB".getBytes());
 	    freq = myObject.subByteFrequency(4,5);
-	    if(1 != freq) {
-		System.out.println("SubBytefrequency() for AAAB, should return 1, when taget is AAAAB[4:5]. But it returns "+freq); c++;
+	    if(1 != freq) { 
+		System.out.println("SubBytefrequency() for AAAB, should return 1, when taget is AAAAB[4:5]. But it returns "+freq); c++;  
 	    }
 	}
 	catch(Exception e) {
@@ -126,18 +126,8 @@ public class TestCase {
 	    InformationEstimatorInterface myObject;
 	    double value;
 	    System.out.println("checking s4.slow.InformationEstimator");
-		myObject = new InformationEstimator();
-		myObject.setSpace("3210321001230123".getBytes());
-
-		//ターゲットがnullの時
-	    value = myObject.estimation();
-		if((value < -0.0001) || (0.0001 <value)) { System.out.println("IQ for null in 3210321001230123 should be 0.0 But it returns "+value); c++; }
-		//ターゲット長が0の時
-		myObject.setTarget("".getBytes());
-	    value = myObject.estimation();
-		if((value < -0.0001) || (0.0001 < value)) { System.out.println("IQ for \"\" in 3210321001230123 should be 0.0 But it returns "+value); c++; }
-
-		//ターゲットが0のとき
+	    myObject = new InformationEstimator();
+	    myObject.setSpace("3210321001230123".getBytes());
 	    myObject.setTarget("0".getBytes());
 	    value = myObject.estimation();
 	    if((value < 1.9999) || (2.0001 <value)) { System.out.println("IQ for 0 in 3210321001230123 should be 2.0. But it returns "+value); c++; }
@@ -146,18 +136,10 @@ public class TestCase {
 	    if((value < 2.9999) || (3.0001 <value)) { System.out.println("IQ for 01 in 3210321001230123 should be 3.0. But it returns "+value); c++; }
 	    myObject.setTarget("0123".getBytes());
 	    value = myObject.estimation();
-		if((value < 2.9999) || (3.0001 <value)) { System.out.println("IQ for 0123 in 3210321001230123 should be 3.0. But it returns "+value); c++; }
-
+	    if((value < 2.9999) || (3.0001 <value)) { System.out.println("IQ for 0123 in 3210321001230123 should be 3.0. But it returns "+value); c++; }
 	    myObject.setTarget("00".getBytes());
 	    value = myObject.estimation();
-		if((value < 3.9999) || (4.0001 <value)) { System.out.println("IQ for 00 in 3210321001230123 should be 4.0. But it returns "+value); c++; }
-
-		//Spaceがnullの時
-		myObject = new InformationEstimator();
-        myObject.setTarget("0".getBytes());
-        value = myObject.estimation();
-		if(value < Double.MAX_VALUE-0.0001) { System.out.println("IQ for \"\" in null should be "+Double.MAX_VALUE+" But it returns "+value); c++; }
-
+	    if((value < 3.9999) || (4.0001 <value)) { System.out.println("IQ for 00 in 3210321001230123 should be 4.0. But it returns "+value); c++; }
 	}
 	catch(Exception e) {
 	    System.out.println("Exception occurred: STOP");
@@ -165,4 +147,5 @@ public class TestCase {
 	}
 	if(c == 0) { System.out.println("TestCase OK"); }
     }
-}
+}	    
+	    

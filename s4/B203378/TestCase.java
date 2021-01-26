@@ -1,4 +1,4 @@
-package s4.B203378; // Please modify to s4.Bnnnnnn, where nnnnnn is your student ID. 
+package s4.B203379; // Please modify to s4.Bnnnnnn, where nnnnnn is your student ID. 
 import java.lang.*;
 import s4.specification.*;
 
@@ -47,6 +47,12 @@ public class TestCase {
 	    if(4 != freq) {System.out.println("frequency() for Hi_Ho_Hi_Ho, should return 4, when taget is H. But it returns "+freq); c++; }
 
 	    // Write your testCase here
+
+	    myObject.setSpace("".getBytes());
+	    myObject.setTarget("N".getBytes());
+	    freq = myObject.frequency();
+	    if(0 != freq) {System.out.println("frequency() for Orphans, should return answer, when taget is H. But it returns "+freq); c++; }
+
 	    myObject.setSpace("Orphans".getBytes());
 	    myObject.setTarget("answer".getBytes());
 	    freq = myObject.frequency();
