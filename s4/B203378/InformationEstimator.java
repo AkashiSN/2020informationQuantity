@@ -1,4 +1,4 @@
-package s4.B203379; // Please modify to s4.Bnnnnnn, where nnnnnn is your student ID. 
+package s4.B203378; // Please modify to s4.Bnnnnnn, where nnnnnn is your student ID.
 import java.lang.*;
 import s4.specification.*;
 
@@ -56,10 +56,10 @@ public class InformationEstimator implements InformationEstimatorInterface {
         if (mySpace.length == 0)
             return Double.MAX_VALUE;
 
-        for (int i = 0; i < myTarget.length; i++) { 
+        for (int i = 0; i < myTarget.length; i++) {
             iqResult[i] = Double.MAX_VALUE;
             //先頭からn番目までの計算結果を配列のn-1番目に保存(分割されていない場合)
-            myFrequencer.setTarget(subBytes(myTarget, 0, i+1)); 
+            myFrequencer.setTarget(subBytes(myTarget, 0, i+1));
             double value = iq(myFrequencer.frequency());
 
             if (value < iqResult[i])
@@ -137,4 +137,3 @@ public class InformationEstimator implements InformationEstimatorInterface {
         System.out.println(">00 "+value);
     }
 }
-

@@ -285,7 +285,7 @@ public class Frequencer implements FrequencerInterface{
 	for(i=0;i<suffixArray.length;i++){
 		if(targetCompare(i,start,end)==0) break;
 	}
-	if(i > 10)
+	if(i >= suffixArray.length)
 		return 0;
 
         return i; //このコードは変更しなければならない。          
@@ -353,6 +353,10 @@ public class Frequencer implements FrequencerInterface{
             frequencerObject = new Frequencer();
             frequencerObject.setSpace("Hi Ho Hi Ho".getBytes());
             frequencerObject.printSuffixArray();
+
+	    frequencerObject = new Frequencer();
+	    frequencerObject.setSpace("AAA".getBytes());
+		 frequencerObject.printSuffixArray();
             /* Example from "Hi Ho Hi Ho"    
                0: Hi Ho                      
                1: Ho                         
@@ -367,15 +371,15 @@ public class Frequencer implements FrequencerInterface{
               10:o Hi Ho                     
             */
 
-            frequencerObject.setTarget("H".getBytes());
+            frequencerObject.setTarget("AAAA".getBytes());
 	   /* for(int i=0;i<11;i++)
 	    	System.out.println(i+":"+frequencerObject.targetCompare(i,0,1));*/
 
             //                                         
             // ****  Please write code to check subByteStartIndex, and subByteEndIndex
    
-	  System.out.println("S:"+frequencerObject.subByteStartIndex(0,1));
-	  System.out.println("E:"+frequencerObject.subByteEndIndex(0,1));
+	  System.out.println("S:"+frequencerObject.subByteStartIndex(0,4));
+	  System.out.println("E:"+frequencerObject.subByteEndIndex(0,4));
 	  
 
 	int result = frequencerObject.frequency();

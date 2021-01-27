@@ -70,7 +70,7 @@ public class Frequencer implements FrequencerInterface{
         // if suffix_i = suffix_j, it returns 0;
 
         // // ここにコードを記述せよ
-        //　文字列の長さが短い文字列を前に入れ替える
+        // 文字列の長さが短い文字列を前に入れ替える
         if(i == mySpace.length) return -1;
         else if(j == mySpace.length) return 1;
 
@@ -106,21 +106,51 @@ public class Frequencer implements FrequencerInterface{
         //   suffixArray[ 1]= 1:BA
         //   suffixArray[ 2]= 0:CBA
         // のようになるべきである。
-
-        // printSuffixArray();
-
-        for(int i = 0; i < suffixArray.length; i++){
-          for(int j = suffixArray.length - 1; j > i; j--){
-            if(suffixCompare(suffixArray[j - 1], suffixArray[j]) == 1){
-              int tmp = suffixArray[j - 1];
-              suffixArray[j - 1] = suffixArray[j];
-              suffixArray[j] = tmp;
-            }
-          }
-        }
+        mergeSort(suffixArray);
       }
-    // ここから始まり、指定する範囲までは変更してはならないコードである。
 
+    private void merge(int[] d1, int[] d2, int[] d){
+      int d_i = 0;
+      int d1_i = 0;
+      int d2_i = 0;
+
+      while(true){
+        // 小さいほうをマージ後の配列に追加
+        if(suffixCompare(d1[d1_i], d2[d2_i]) == -1) d[d_i++] = d1[d1_i++];
+        else d[d_i++] = d2[d2_i++];
+
+        if(d1_i == d1.length || d2_i == d2.length) break;
+      }
+
+      // 残っている方の配列をマージ後の配列に追加
+      while(d1_i < d1.length) { d[d_i++] = d1[d1_i++]; }
+      while(d2_i < d2.length) { d[d_i++] = d2[d2_i++]; }
+    }
+
+    private void mergeSort(int d[]) {
+      if (d.length > 1){
+        // 配列の分割
+        int d1_len = d.length / 2;
+        int d2_len = d.length - d1_len;
+        int[] d1 = new int [d1_len];
+        int[] d2 = new int [d2_len];
+
+        for(int i = 0; i < d1_len; i++){
+          d1[i] = d[i];
+        }
+        for(int i = 0; i < d2_len; i++){
+          d2[i] = d[d1_len + i];
+        }
+
+        // 配列のソート
+        mergeSort(d1);
+        mergeSort(d2);
+        // 配列のマージ
+        merge(d1, d2, d);
+      }
+    }
+
+    // ここから始まり、指定する範囲までは変更してはならないコードである。
     public void setTarget(byte [] target) {
         myTarget = target; if(myTarget.length>0) targetReady = true;
     }
@@ -154,8 +184,6 @@ public class Frequencer implements FrequencerInterface{
         // 演習の内容は、適切なsubByteStartIndexとsubByteEndIndexを定義することである。
         int first = subByteStartIndex(start, end);
         int last1 = subByteEndIndex(start, end);
-        // System.out.println("first : " + first);
-        // System.out.println("last1 : " + last1);
         return last1 - first;
     }
     // 変更してはいけないコードはここまで。
@@ -206,7 +234,6 @@ public class Frequencer implements FrequencerInterface{
         else return -1;
     }
 
-
     private int subByteStartIndex(int start, int end) {
         //suffix arrayのなかで、目的の文字列の出現が始まる位置を求めるメソッド
         // 以下のように定義せよ。
@@ -239,15 +266,6 @@ public class Frequencer implements FrequencerInterface{
 
         int startIndex = -1; // 出現が始まる位置を格納
 
-        // 線形サーチによる目的の文字列の出現が始まる位置の探索
-        /*
-        for(int i = 0; i < suffixArray.length; i++){
-          if(targetCompare(suffixArray[i], start, end) == 0){
-            startIndex = i;
-            break;
-          }
-        }
-        */
         // 二分探索による目的の文字列の出現が始まる位置の探索
         int left = 0;
         int right = suffixArray.length;
@@ -294,20 +312,9 @@ public class Frequencer implements FrequencerInterface{
         // Assuming the suffix array is created from "Hi Ho Hi Ho",
         // if target_start_end is"i", it will return 9 for "Hi Ho Hi Ho".
         //
-        //　ここにコードを記述せよ
 
         int endIndex = -1; // 出現しなくなる場所の位置を格納
-        // 線形サーチによる目的の文字列の出現しなくなる場所の探索
-        /*
-        for(int i = 0; i < suffixArray.length; i++){
-          if(targetCompare(suffixArray[i], start, end) == 0){
-            if(targetCompare(suffixArray[i + 1], start, end) == 1){
-              endIndex = i + 1;
-              break;
-            }
-          }
-        }
-        */
+
         // 二分探索による目的の文字列の出現しなくなる場所の探索
         int left = 0;
         int right = suffixArray.length;
@@ -375,6 +382,6 @@ public class Frequencer implements FrequencerInterface{
         }
         catch(Exception e) {
             System.out.println("STOP");
-        }
+          }
     }
 }

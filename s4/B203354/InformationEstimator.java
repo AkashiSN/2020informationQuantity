@@ -48,45 +48,21 @@ public class InformationEstimator implements InformationEstimatorInterface {
 
     @Override
     public double estimation(){
-        boolean [] partition = new boolean[myTarget.length+1];
-        int np = 1<<(myTarget.length-1);
-        // System.out.println("np="+np+" length="+myTarget.length);
-        double value = Double.MAX_VALUE; // value = mininimum of each "value1".
+        if (myTarget == null || myTarget.length == 0) return 0.0;
+        if (mySpace == null || mySpace.length == 0) return Double.MAX_VALUE;
 
-        for(int p=0; p<np; p++) { // There are 2^(n-1) kinds of partitions.
-            // binary representation of p forms partition.
-            // for partition {"ab" "cde" "fg"}
-            // a b c d e f g   : myTarget
-            // T F T F F T F T : partition:
-            partition[0] = true; // I know that this is not needed, but..
-            for(int i=0; i<myTarget.length -1;i++) {
-                partition[i+1] = (0 !=((1<<i) & p));
+        double[] iq_array = new double[myTarget.length];
+        for (int i = 0; i < myTarget.length; i++) {
+            myFrequencer.setTarget(subBytes(myTarget, 0, i+1));
+            iq_array[i] = iq(myFrequencer.frequency());
+            for (int j = 0; j < i; j++) {
+                myFrequencer.setTarget(subBytes(myTarget, j+1, i+1));
+                double value1 = iq_array[j] + iq(myFrequencer.frequency());
+                if (iq_array[i] > value1) iq_array[i] = value1;
             }
-            partition[myTarget.length] = true;
-
-            // Compute Information Quantity for the partition, in "value1"
-            // value1 = IQ(#"ab")+IQ(#"cde")+IQ(#"fg") for the above example
-            double value1 = (double) 0.0;
-            int end = 0;
-            int start = end;
-            while(start<myTarget.length) {
-                // System.out.write(myTarget[end]);
-                end++;;
-                while(partition[end] == false) {
-                    // System.out.write(myTarget[end]);
-                    end++;
-                }
-                // System.out.print("("+start+","+end+")");
-                myFrequencer.setTarget(subBytes(myTarget, start, end));
-                value1 = value1 + iq(myFrequencer.frequency());
-                start = end;
-            }
-            // System.out.println(" "+ value1);
-
-            // Get the minimal value in "value"
-            if(value1 < value) value = value1;
         }
-        return value;
+
+        return iq_array[myTarget.length - 1];
     }
 
     public static void main(String[] args) {

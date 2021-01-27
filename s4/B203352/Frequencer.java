@@ -195,7 +195,8 @@ public class Frequencer implements FrequencerInterface{
         //            suffixCompare should return -1.
         //
         // ここに比較のコードを書け 
-        while (i < mySpace.length && j < k) {
+        while (j < k) {
+            if (i >= mySpace.length) return -1;
             if (mySpace[i] > myTarget[j]) return 1;
             else if (mySpace[i] < myTarget[j]) return -1;
             i++;
@@ -238,8 +239,8 @@ public class Frequencer implements FrequencerInterface{
         // 二分探索
         int left = 0;
         int right = suffixArray.length - 1;
-        int mid;
-        int result;
+        int mid = -1;
+        int result = -1;
         int foundIndex = -1;
         while (left < right) {
             mid = (left + right) / 2;
@@ -250,6 +251,11 @@ public class Frequencer implements FrequencerInterface{
                 foundIndex = mid;
                 right = mid - 1;
             }
+        }
+        mid = (left + right) / 2;
+        result = targetCompare(suffixArray[mid], start, end);
+        if (result == 0) {
+            foundIndex = mid;
         }
 
         return foundIndex;
@@ -286,9 +292,9 @@ public class Frequencer implements FrequencerInterface{
         // 二分探索
         int left = 0;
         int right = suffixArray.length - 1;
-        int mid;
-        int result;
-        int foundIndex = -1;
+        int mid = -1;
+        int result = -1;
+        int foundIndex = -2;
         while (left < right) {
             mid = (left + right) / 2;
             result = targetCompare(suffixArray[mid], start, end);
@@ -298,6 +304,11 @@ public class Frequencer implements FrequencerInterface{
                 foundIndex = mid;
                 left = mid + 1;
             }
+        }
+        mid = (left + right) / 2;
+        result = targetCompare(suffixArray[mid], start, end);
+        if (result == 0) {
+            foundIndex = mid;
         }
 
         return foundIndex + 1;

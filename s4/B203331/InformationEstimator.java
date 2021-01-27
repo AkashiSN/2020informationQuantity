@@ -21,6 +21,7 @@ public class InformationEstimator implements InformationEstimatorInterface {
     byte[] myTarget; // data to compute its information quantity
     byte[] mySpace;  // Sample space to compute the probability
     FrequencerInterface myFrequencer;  // Object for counting frequency
+    double[] result;
 
     byte[] subBytes(byte[] x, int start, int end) {
         // corresponding to substring of String for byte[],
@@ -52,7 +53,31 @@ public class InformationEstimator implements InformationEstimatorInterface {
         int np = 1<<(myTarget.length-1);
         // System.out.println("np="+np+" length="+myTarget.length);
         double value = Double.MAX_VALUE; // value = mininimum of each "value1".
+	double value1 = (double) 0.0;
+	double dp_memo[] = new double[myTarget.length]; //計算結果を格納する配列
 
+	if(myTarget.length == 0)
+		return 0;
+ 	if(mySpace.length == 0)
+		return value;
+		
+	myFrequencer.setTarget(myTarget);
+	
+	for(int i = 0; i < myTarget.length; i++) {
+		dp_memo[i] = iq(myFrequencer.subByteFrequency(0, i+1));
+	}
+	for(int i = 0; i < myTarget.length; i++) {
+		for(int j = i; j > 0; j--) {
+			value1 = dp_memo[j-1] + iq(myFrequencer.subByteFrequency(j, i+1));
+			if(dp_memo[i] > value1){
+				dp_memo[i] = value1;
+			}	
+		}
+	}
+	
+	return dp_memo[myTarget.length-1];
+	
+	/*
         for(int p=0; p<np; p++) { // There are 2^(n-1) kinds of partitions.
             // binary representation of p forms partition.
             // for partition {"ab" "cde" "fg"}
@@ -86,7 +111,7 @@ public class InformationEstimator implements InformationEstimatorInterface {
             // Get the minimal value in "value"
             if(value1 < value) value = value1;
         }
-        return value;
+        return value;*/
     }
 
     public static void main(String[] args) {

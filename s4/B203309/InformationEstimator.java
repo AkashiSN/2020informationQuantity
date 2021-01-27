@@ -50,7 +50,7 @@ public class InformationEstimator implements InformationEstimatorInterface {
     public double estimation(){
         double value = Double.MAX_VALUE;
         double value1 = (double) 0.0;
-        double f[] = new double[myTarget.length];
+        double f[] = new double[myTarget.length+1];
 
         for(int i=0; i<myTarget.length; i++){
 		   myFrequencer.setTarget(subBytes(myTarget, 0, i+1));

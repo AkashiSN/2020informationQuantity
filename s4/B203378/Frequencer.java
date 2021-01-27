@@ -1,4 +1,4 @@
-package s4.B203379;  // ここは、かならず、自分の名前に変えよ。
+package s4.B203378;  // ここは、かならず、自分の名前に変えよ。
 import java.lang.*;
 import s4.specification.*;
 
@@ -145,7 +145,7 @@ public class Frequencer implements FrequencerInterface{
                 }
             }
         }*/
-        
+
         quickSort(0, suffixArray.length-1);
     }
 
@@ -377,7 +377,7 @@ public class Frequencer implements FrequencerInterface{
                 upper = middle - 1;
             }
         }
-        
+
         return t + 1;//このコードは変更しなければならない。
     }
 

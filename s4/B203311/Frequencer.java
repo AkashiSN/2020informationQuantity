@@ -71,6 +71,7 @@ public class Frequencer implements FrequencerInterface{
         // if suffix_i = suffix_j, it returns 0;   
 
         // ここにコードを記述せよ 
+        /*
         int result = 0;
         byte[] suffix_i = new byte[mySpace.length-i];
         byte[] suffix_j = new byte[mySpace.length-j];
@@ -106,6 +107,27 @@ public class Frequencer implements FrequencerInterface{
         }
 
         return result; // この行は変更しなければいけない。 
+        */
+        int result = 0;
+        int k;
+        for(k=0; i+k<mySpace.length && j+k<mySpace.length; k++){
+            if(mySpace[i+k] > mySpace[j+k]){
+                result = 1;
+                break;
+            }else if(mySpace[i+k] < mySpace[j+k]){
+                result = -1;
+                break;
+            }
+        }
+        if(result == 0){
+            if(i+k < mySpace.length){
+                result = 1;
+            }else if(j+k < mySpace.length){
+                result = -1;
+            }
+        }
+
+        return result;
     }
 
     public void setSpace(byte []space) { 
@@ -147,12 +169,17 @@ public class Frequencer implements FrequencerInterface{
     }
 
     private void quickSort(int left,int right){
-        int len = right - left;
-        int i = left+1;
+        int len = right - left + 1;
+        int i = left + 1;
         int j = right;
-        if(len > 1){
+        if(len > 2){
+            java.util.Random rnd = new java.util.Random();
             int temp = 0;
-            int pivot = left;
+            int pivot = rnd.nextInt(len)+left;
+            temp = suffixArray[pivot];
+            suffixArray[pivot] = suffixArray[left];
+            suffixArray[left] = temp;
+            pivot = left;
             while(i < j){
                 while(suffixCompare(suffixArray[i], suffixArray[pivot]) != 1 && i < right){
                     i++;
@@ -171,6 +198,13 @@ public class Frequencer implements FrequencerInterface{
             suffixArray[pivot] = temp;
             quickSort(left, j-1);
             quickSort(j+1, right);
+        }else if(len == 2){
+            int temp = 0;
+            if(suffixCompare(suffixArray[left], suffixArray[right]) == 1){
+                temp = suffixArray[right];
+                suffixArray[right] = suffixArray[left];
+                suffixArray[left] = temp;
+            }
         }
     }
 
@@ -431,6 +465,8 @@ public class Frequencer implements FrequencerInterface{
 
             //                                         
             // ****  Please write code to check subByteStartIndex, and subByteEndIndex
+            frequencerObject.setSpace("cedba".getBytes());
+            frequencerObject.printSuffixArray();
             frequencerObject.setTarget("Hi".getBytes());
             System.out.println("test1"+frequencerObject.targetCompare(3, 0, 1));
             System.out.println("test2"+frequencerObject.targetCompare(3, 0, 2));

@@ -48,13 +48,13 @@ public class InformationEstimator implements InformationEstimatorInterface {
 
     @Override
     public double estimation(){
-        double [] iqResult = new double[myTarget.length];
-
-        if (myTarget.length == 0)
+        if (myTarget.length == 0 || myTarget == null)
             return 0.0;
 
-        if (mySpace.length == 0)
+        if (mySpace.length == 0 || mySpace == null)
             return Double.MAX_VALUE;
+
+        double [] iqResult = new double[myTarget.length];
 
         for (int i = 0; i < myTarget.length; i++) { 
             iqResult[i] = Double.MAX_VALUE;
@@ -75,6 +75,7 @@ public class InformationEstimator implements InformationEstimatorInterface {
                     iqResult[i] = value;
             }
         }
+        
         return iqResult[myTarget.length-1];
 
        /*boolean [] partition = new boolean[myTarget.length+1];
@@ -122,7 +123,7 @@ public class InformationEstimator implements InformationEstimatorInterface {
         InformationEstimator myObject;
         double value;
         myObject = new InformationEstimator();
-        myObject.setSpace("3210321001230123".getBytes());
+        myObject.setSpace("01230123".getBytes());
         myObject.setTarget("0".getBytes());
         value = myObject.estimation();
         System.out.println(">0 "+value);
@@ -135,6 +136,9 @@ public class InformationEstimator implements InformationEstimatorInterface {
         myObject.setTarget("00".getBytes());
         value = myObject.estimation();
         System.out.println(">00 "+value);
+        myObject.setTarget("".getBytes());
+        value = myObject.estimation();
+        System.out.println(">  "+value);
     }
 }
 

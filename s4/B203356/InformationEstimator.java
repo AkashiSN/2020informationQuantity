@@ -1,5 +1,10 @@
 package s4.B203356; // Please modify to s4.Bnnnnnn, where nnnnnn is your student ID. 
+
 import java.lang.*;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+
 import s4.specification.*;
 
 /* What is imported from s4.specification
@@ -21,6 +26,8 @@ public class InformationEstimator implements InformationEstimatorInterface {
     byte[] myTarget; // data to compute its information quantity
     byte[] mySpace;  // Sample space to compute the probability
     FrequencerInterface myFrequencer;  // Object for counting frequency
+    Map<ByteBuffer, Double> minimum_iqRes;
+    Map<ByteBuffer, Double> iqRes;
 
     byte[] subBytes(byte[] x, int start, int end) {
         // corresponding to substring of String for byte[],
@@ -44,15 +51,79 @@ public class InformationEstimator implements InformationEstimatorInterface {
     public void setSpace(byte[] space) {
         myFrequencer = new Frequencer();
         mySpace = space; myFrequencer.setSpace(space);
+        iqRes = new HashMap<ByteBuffer, Double>();
+        minimum_iqRes = new HashMap<ByteBuffer, Double>();
+    }
+
+    double getIQ(byte[] target){
+        ByteBuffer bf = ByteBuffer.wrap(target);
+        double result;
+        if(iqRes.containsKey(bf)){
+            //System.out.println("in iqRes:" + (new String(target)));
+            return iqRes.get(bf);
+        }
+        myFrequencer.setTarget(target);
+        result = iq(myFrequencer.frequency());
+        iqRes.put(bf, result);
+        //System.out.println("culc IQ : "+(new String(target)));
+        return result;
+    }
+
+    double culc_minIQ(byte[] target){
+        double min, result, iqnum;
+        //System.out.println("len:" + target.length);
+        ByteBuffer bf = ByteBuffer.wrap(target);
+        if(minimum_iqRes.containsKey(bf)){
+            //System.out.println("in minimum_iqRes:" + (new String(target)));
+            return minimum_iqRes.get(bf);
+        }
+        if(target.length==1){
+            result = getIQ(target);
+            minimum_iqRes.put(bf, result);
+            //System.out.println("culc Min IQ : "+(new String(target)));
+            return result;
+        }
+    
+        min = getIQ(target);
+        for(int i=1;i<target.length;i++){
+            iqnum = getIQ(subBytes(target, i, target.length));
+            result = culc_minIQ(subBytes(target, 0, i)) + iqnum;
+            if(result<min)
+                min=result;
+        }
+        minimum_iqRes.put(bf, min);
+        //System.out.println("culc Min IQ : "+(new String(target)));
+        return min;
+    }
+
+    void printMap(){
+        System.out.println("----IQ RESULT----");
+        byte[] str;
+        double num;
+        for(ByteBuffer bf : iqRes.keySet()){
+            num=iqRes.get(bf);
+            str = new byte[bf.remaining()];
+            bf.get(str);
+            System.out.println((new String(str)) + " : " + num);
+        }
+
+        System.out.println("----IQ MINIMUM RESULT----");
+        for(ByteBuffer bf : minimum_iqRes.keySet()){
+            num=minimum_iqRes.get(bf);
+            str = new byte[bf.remaining()];
+            bf.get(str);
+            System.out.println((new String(str)) + " : " + num);
+        }
     }
 
     @Override
     public double estimation(){
+        /*
         boolean [] partition = new boolean[myTarget.length+1];
         int np = 1<<(myTarget.length-1);
         // System.out.println("np="+np+" length="+myTarget.length);
         double value = Double.MAX_VALUE; // value = mininimum of each "value1".
-
+        
         for(int p=0; p<np; p++) { // There are 2^(n-1) kinds of partitions.
             // binary representation of p forms partition.
             // for partition {"ab" "cde" "fg"}
@@ -87,6 +158,10 @@ public class InformationEstimator implements InformationEstimatorInterface {
             if(value1 < value) value = value1;
         }
         return value;
+        */
+
+        return culc_minIQ(myTarget);
+
     }
 
     public static void main(String[] args) {
@@ -106,6 +181,10 @@ public class InformationEstimator implements InformationEstimatorInterface {
         myObject.setTarget("00".getBytes());
         value = myObject.estimation();
         System.out.println(">00 "+value);
+        myObject.setTarget("123".getBytes());
+        value = myObject.estimation();
+        System.out.println(">123 "+value);
+        myObject.printMap();
     }
 }
 
