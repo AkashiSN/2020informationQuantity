@@ -58,17 +58,14 @@ public class Frequencer implements FrequencerInterface {
     // if suffix_i < suffix_j, it returns -1
     // if suffix_i = suffix_j, it returns 0;
 
-    while (i < mySpace.length && j < mySpace.length) {
-      byte si = mySpace[i], sj = mySpace[j];
-      if (si == sj) {
-        i++;
-        j++;
-      } else {
-        if (si > sj)
-          return 1;
-        else if (si < sj)
-          return -1;
-      }
+    if (i == j)
+      return 0;
+
+    for (; i < mySpace.length && j < mySpace.length; i++, j++) {
+      if (mySpace[i] < mySpace[j])
+        return -1;
+      else if (mySpace[i] > mySpace[j])
+        return 1;
     }
 
     if (i == j) {
@@ -93,6 +90,7 @@ public class Frequencer implements FrequencerInterface {
   private void sort(int left, int right, int depth) {
     int range = right - left;
 
+    // ソートの必要なし
     if (range < 2)
       return;
 
@@ -263,24 +261,16 @@ public class Frequencer implements FrequencerInterface {
     //
     // ここに比較のコードを書け
     //
-    // System.out.println("i: " + i);
-    int LOOP_NUM = mySpace.length - suffixArray[i];
-    int p;
-    if (k - j < LOOP_NUM)
-      LOOP_NUM = k - j;
-    for (p = 0; p < LOOP_NUM; p++) {
-      if (mySpace[suffixArray[i] + p] == myTarget[j + p])
-        continue;
-      else if (mySpace[suffixArray[i] + p] < myTarget[j + p])
-        return -1; // l.172
-      else
-        return 1; // l.171
-    }
 
-    if (k - j <= mySpace.length - suffixArray[i])
-      return 0; // l.183, l.185
-    else
-      return -1; // l.184
+    for (int p = 0; p < k - j; p++) {
+      if (i + p >= mySpace.length)
+        return -1;
+      else if (mySpace[i + p] > myTarget[j + p])
+        return 1;
+      else if (mySpace[i + p] < myTarget[j + p])
+        return -1;
+    }
+    return 0;
   }
 
   private int subByteStartIndex(int start, int end) {
@@ -303,37 +293,19 @@ public class Frequencer implements FrequencerInterface {
     // if target_start_end is "Ho ", it will return 6.
     //
     // ここにコードを記述せよ。
-    /*
-     * int position = 0; for (position = 0; position < mySpace.length; position++)
-     * if(targetCompare(position, start, end) == 0) return position; return
-     * mySpace.length; // 見つからなかったとき
-     */
-    /// *
+
     // 二分探査
-    // 探査結果の保存が必要
-    int find = mySpace.length;
-    int top = 0, bottom = mySpace.length;
-    while (top <= bottom) {
+    int top = -1, bottom = mySpace.length;
+    while (bottom - top > 1) {
       int position = (top + bottom) / 2;
-      if (position < 0 || mySpace.length <= position)
-        break;
-      int result = targetCompare(position, start, end);
-      if (result == 0) { // 文字列を含む
-        find = position; // 探査結果を保存
-        bottom = position - 1; // 辞書順で前方を探索
-      } else if (result == 1) { // spaceよりも前に文字列がある
-        bottom = position - 1; // 辞書順で前方を探索
-      } else { // targetよりも後ろに文字列がある
-        top = position + 1; // 辞書順で後方を探索
-      }
+      int result = targetCompare(suffixArray[position], start, end);
+      if (result >= 0)
+        bottom = position;
+      else
+        top = position;
     }
-    return find;
-    // */
-    /*
-     * mySpace.length: 3, target: AAAA start: 0, end: 4 0:A 1:AA 2:AAA
-     *
-     * top: 3 bottom: 3 position: 3 result: -1 find: 3
-     */
+
+    return bottom;
   }
 
   private int subByteEndIndex(int start, int end) {
@@ -355,37 +327,19 @@ public class Frequencer implements FrequencerInterface {
     // if target_start_end is"i", it will return 9 for "Hi Ho Hi Ho".
     //
     // ここにコードを記述せよ
-    /*
-     * int position; for (position = mySpace.length - 1; position >= 0; position--)
-     * if(targetCompare(position, start, end) == 0) return position + 1; return
-     * mySpace.length; // 見つからなかったとき
-     */
-    /// *
+
     // 二分探査
-    // 探査結果の保存が必要
-    int find = mySpace.length;
-    int top = 0, bottom = mySpace.length;
-    while (top <= bottom) {
+    int top = -1, bottom = mySpace.length;
+    while (bottom - top > 1) {
       int position = (top + bottom) / 2;
-      if (position < 0 || mySpace.length <= position)
-        break;
-      int result = targetCompare(position, start, end);
-      if (result == 0) { // 文字列を含む
-        find = position + 1; // 探査結果を保存
-        top = position + 1; // 辞書順で前方を探索
-      } else if (result == 1) { // targetよりも前に文字列がある
-        bottom = position - 1; // 辞書順で前方を探索
-      } else { // targetよりも後ろに文字列がある
-        top = position + 1; // 辞書順で後方を探索
-      }
+      int result = targetCompare(suffixArray[position], start, end);
+      if (result > 0)
+        bottom = position;
+      else
+        top = position;
     }
-    return find;
-    // */
-    /*
-     * length = 4 target: A 0:A 1:AA 2:AAA 3:AAAA
-     *
-     * top: 4 bottom: 4 position: 4 == mySpace.length result: 0 find: 4
-     */
+
+    return bottom;
   }
 
   public static void main(String[] args) {
